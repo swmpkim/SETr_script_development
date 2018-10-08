@@ -21,7 +21,7 @@ Can marsh vegetation communities keep pace with sea level rise? To address this 
 # Important Project Links  
 
 +  __Sign up for our email lists__ through [this Google form](https://goo.gl/forms/CLWmBm2cexEhEhZt1)  
-+  Keep up with R code at [the GitHub repository](https://swmpkim.github.io/SETr_script_development/)  
++  Keep up with R code at [the GitHub repository](https://github.com/swmpkim/SETr_script_development)  
 +  Watch the [recording of the Kickoff Webinar](https://youtu.be/Gc7YedK1Ek0) from 9/25/2018  
 +  See [slides from the Kickoff Webinar](https://drive.google.com/file/d/1LIT80g_CfRJH2dKXbORHGesQy1uNUJP7/view?usp=sharing)  
 +  Learn more about the [NERRS Science Collaborative](http://graham.umich.edu/water/nerrs)
