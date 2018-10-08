@@ -3,7 +3,8 @@
     -   [Email list sign-up](#email-list-sign-up)
 -   [Project Summary](#project-summary)
 -   [Important Project Links](#important-project-links)
-    -   [Useful References](#useful-references)
+-   [Monthly Call Notes](#monthly-call-notes)
+-   [Useful References](#useful-references)
 
 SETr script development
 =======================
@@ -29,8 +30,13 @@ Important Project Links
 -   See [slides from the Kickoff Webinar](https://drive.google.com/file/d/1LIT80g_CfRJH2dKXbORHGesQy1uNUJP7/view?usp=sharing)
 -   Learn more about the [NERRS Science Collaborative](http://graham.umich.edu/water/nerrs)
 
+Monthly Call Notes
+==================
+
+-   [2018-10-03 call](https://drive.google.com/file/d/1zY7R2lVdmK55RjfMdRA9T9demga-JQ9G/view?usp=sharing)
+
 Useful References
------------------
+=================
 
 -   [Wickham 2014](https://www.jstatsoft.org/article/view/v059i10) - Tidy Data
 -   [Broman and Woo 2018](https://www.tandfonline.com/doi/abs/10.1080/00031305.2017.1375989) - Data Organization in Spreadsheets
