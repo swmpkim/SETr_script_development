@@ -35,6 +35,7 @@ ggplot(dat) +
     facet_wrap(~set_id, ncol = 2, scales = 'free_y') +
     theme_bw()
 
+
 # check for negative pin heights
 if(sum(dat$pin_height < 0, na.rm = TRUE) > 1) {
     print(paste0("There are ", sum(dat$pin_height < 0, na.rm = TRUE), " pin heights <0. The first 10 are below. To see more, enter the command View(neg_pin_hts)."))
