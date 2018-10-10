@@ -132,5 +132,15 @@ if(exists('set_pin_no_fill', dat_coded) == TRUE) {
 sum(dat_coded$code == 'other, not in key')
 
 
+# change names to be slightly more consistent
+# also get rid of any extra rows
+dat_coded <- dat_coded %>%
+    select(set_id = site_label, date, arm_position = set_arm_position, pin_number = set_pin_no, pin_height = pin_measurement_mm, code, notes, latitude, longitude) %>%
+    filter(is.na(set_id) == FALSE)
+
 # spit out csv file
-write.csv(dat_coded, 'data/intermediate/DEL.csv', row.names = FALSE)
+write_csv(dat_coded, 'data/intermediate/DEL.csv')
+
+
+# neg_pin_hts <- dat_coded %>% filter(pin_height < 0)
+# write_csv(neg_pin_hts, 'data/needs_attention/DEL_neg_pin_heights.csv')
