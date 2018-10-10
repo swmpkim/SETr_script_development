@@ -55,8 +55,6 @@ dat_all <- bind_cols(dat, fills)
 # Deal with color key
 #############################
 
-path <- 'data/raw_original/DEL.xlsx'
-
 codes <- read_excel(path, sheet = 'SET data') %>%
     select(X__1) %>%
     set_names('code') %>%
@@ -88,27 +86,51 @@ rm('codefills', 'col', 'fill_colors', 'fills_exist', 'i', 'names', 'sums')
 # Match fills and codes in main dataframe
 #############################
 
-# trying to say, if !is.na(*_fill), look in codes$fill to find a match. If a match is found, insert the corresponding codes$code into the main dataframe. Else, insert 'other; not in key' (text)
+# pin_measurement_mm is typically the column that has color coding
+# sometimes set_pin_no does, but that may be resolved - so I'm writing this
+# in such a way that the code will run with or without it
+# using the if(exists) stuff
 
 dat_coded <- left_join(dat_all, codes, by = c('pin_measurement_mm_fill' = 'fill')) %>%
     mutate(pin_code = code,
-           code = NULL) %>%
-    left_join(., codes, by = c('set_pin_no_fill' = 'fill')) %>%
-    mutate(pin_code2 = code,
-           code = NULL)
+           code = NULL)  
+
+
+if(exists('set_pin_no_fill', dat_coded) == TRUE) {
+    dat_coded <- left_join(dat_coded, codes, by = c('set_pin_no_fill' = 'fill')) %>%
+        mutate(pin_code2 = code,
+               code = NULL)
+}
+
 
 dat_coded <- dat_coded %>%
     mutate(code = case_when(
         !is.na(pin_measurement_mm_fill) & !is.na(pin_code) ~ pin_code,
-        !is.na(set_pin_no_fill) & !is.na(pin_code2) ~ pin_code2,
         !is.na(pin_measurement_mm_fill) & is.na(pin_code) ~ 'other, not in key',
-        !is.na(set_pin_no_fill) & is.na(pin_code2) ~ 'other, not in key',
-        !is.na(pin_code) & !is.na(pin_code2) ~ paste0(pin_code, pin_code2),
         TRUE ~ '0'
-        )
+    )
     ) %>%
-    select(-pin_measurement_mm_fill, -set_pin_no_fill, -pin_code, -pin_code2)
+    select(-pin_measurement_mm_fill, -pin_code)
+
+
+
+if(exists('set_pin_no_fill', dat_coded) == TRUE) {
+    dat_coded <- dat_coded %>%
+        mutate(code = case_when(
+            !is.na(set_pin_no_fill) & !is.na(pin_code2) ~ pin_code2,
+            !is.na(set_pin_no_fill) & is.na(pin_code2) ~ 'other, not in key',
+            !is.na(code) & !is.na(pin_code2) ~ paste0(code, pin_code2),
+            TRUE ~ code
+        )) %>%
+        select(-set_pin_no_fill, -pin_code2)
+}
+
+
 
 # see how many codes are not in key
 # hopefully after the original file is looked at, this will be 0
 sum(dat_coded$code == 'other, not in key')
+
+
+# spit out csv file
+write.csv(dat_coded, 'data/intermediate/DEL.csv', row.names = FALSE)
