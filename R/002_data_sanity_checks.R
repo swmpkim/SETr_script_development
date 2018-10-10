@@ -37,8 +37,7 @@ ggplot(dat) +
 
 # check for negative pin heights
 if(sum(dat$pin_height < 0, na.rm = TRUE) > 1) {
-    print(paste0("There are ", sum(dat$pin_height < 0), " pin heights <0. They are:"))
+    print(paste0("There are ", sum(dat$pin_height < 0, na.rm = TRUE), " pin heights <0. The first 10 are below. To see more, enter the command View(neg_pin_hts)."))
     neg_pin_hts <- dat %>% filter(pin_height < 0)
     head(neg_pin_hts, 10)
-    print("View 'neg_pin_hts' data frame to see more.")
-} else {print("all pin heights are >0")}
+    } else {print("all pin heights are >0")}
