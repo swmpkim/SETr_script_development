@@ -10,7 +10,7 @@ library(janitor)
 # Deal with main data frame
 #############################
 
-path <- '../data/raw_original/DEL.xlsx'
+path <- 'data/raw_original/DEL.xlsx'
 
 # read tabular data
 dat <- read_excel(path, sheet = 'SET data') %>%
@@ -55,7 +55,7 @@ dat_all <- bind_cols(dat, fills)
 # Deal with color key
 #############################
 
-path <- '../data/raw_original/DEL.xlsx'
+path <- 'data/raw_original/DEL.xlsx'
 
 codes <- read_excel(path, sheet = 'SET data') %>%
     select(X__1) %>%
