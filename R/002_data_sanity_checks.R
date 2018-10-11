@@ -1,4 +1,5 @@
 library(tidyverse)
+library(janitor)
 
 path <- 'data/intermediate'
 
@@ -29,6 +30,12 @@ unique(dat$pin_number)
 summary(dat$pin_number)
 summary(dat$pin_height)
 
+dat %>% tabyl(set_id)
+dat %>% tabyl(set_id, arm_position)
+dat %>% tabyl(set_id, pin_number)
+dat %>% tabyl(arm_position, pin_number, set_id) %>%
+    adorn_title()
+# pipe these into knitr::kable for an rmarkdown report
 
 ggplot(dat) +
     geom_histogram(aes(pin_height), fill = 'navyblue', bins = 50) +

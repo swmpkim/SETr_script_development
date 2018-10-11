@@ -1,0 +1,118 @@
+---
+title: "Data Sanity Checks"
+date: "`r Sys.Date()`"
+output: 
+    html_document:
+        toc: true
+        toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+```
+
+```{r libraries}
+library(tidyverse)
+library(janitor)
+library(knitr)
+library(lubridate)
+```
+
+```{r data input}
+path <- '../data/intermediate'
+
+files_to_check <- dir(path)
+
+DEL <- paste0(path, '/DEL.csv')
+SOS <- paste0(path, '/SOS.csv')
+
+##########################################
+file_of_choice <- SOS
+##########################################
+
+dat <- read_csv(file_of_choice)
+```
+
+# General  
+
+## Column Names  
+
+```{r}
+knitr::kable(names(dat))
+```
+
+## Variable Types  
+
+```{r}
+sapply(dat, class)
+# there must be a way to check this... like, dat$date should be POSIXct or Date... etc.
+# and if something doesn't match, highlight it somewhere
+# maybe in a different tab, and have the html file open up on that tabset
+```
+
+
+## First few values  
+
+```{r}
+kable(head(dat))
+```
+
+## Last few values  
+
+```{r}
+kable(tail(dat))
+```
+
+
+# Numeric Summaries  
+
+```{r}
+# check to make sure everything is within boundaries
+# look for duplication in names; pin numbers that are not 1-9; negative pin heights
+
+dates <- dat %>%
+    select(date, set_id) %>%
+    mutate(year = year(date),
+           month = month(date))
+
+dates %>% tabyl(year, month) %>% 
+    adorn_title() %>%
+    kable()
+dates %>% tabyl(year, month, set_id) %>%
+    adorn_title()
+dat %>% tabyl(set_id) %>% 
+    kable()
+dat %>% tabyl(set_id, arm_position) %>% 
+    adorn_title %>% 
+    kable()
+dat %>% tabyl(set_id, pin_number) %>% 
+    kable()
+dat %>% tabyl(arm_position, pin_number, set_id) %>%
+    adorn_title() 
+# pipe these into knitr::kable for an rmarkdown report
+```
+
+# Histograms  
+
+```{r}
+ggplot(dat) +
+    geom_histogram(aes(pin_height), fill = 'navyblue', bins = 50) +
+    facet_wrap(~set_id, ncol = 2, scales = 'free_y') +
+    theme_bw()
+```
+
+# Tests and Checks  
+
+## Negative Pin Heights  
+
+
+```{r}
+# check for negative pin heights
+if(sum(dat$pin_height < 0, na.rm = TRUE) > 1) {
+    print(paste0("There are ", sum(dat$pin_height < 0, na.rm = TRUE), " pin heights <0. They are listed below."))
+    neg_pin_hts <- dat %>% filter(pin_height < 0)
+    kable(neg_pin_hts)
+    } else {print("all pin heights are >0")}
+
+```
+
