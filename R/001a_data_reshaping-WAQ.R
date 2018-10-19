@@ -38,14 +38,13 @@ names(dat) <- paste0('dat', years)
 ###############################
 
 ## fix the dates in the 2013 data frame
-table(dat$dat2013$date)   # see what's wrong
 dat$dat2013$date <- gsub("1020", NA, dat$dat2013$date)  # replace that comment about 1020 not being read with NA
-dat$dat2013$date <- excel_numeric_to_date(as.numeric(dat$dat2013$date)) # convert to dates
 
+dat$dat2013 <- dat$dat2013 %>%
+    mutate(date = excel_numeric_to_date(as.numeric(dat$dat2013$date)),
+           pin_height = as.numeric(x2013_measured_pin_height_cm)) %>%
+    select(-x2013_measured_pin_height_cm)
 
-# measured_pin_height is character too; make it numeric
-# which coerces some things to NA, but they were typed NAs originally anyway
-dat$dat2013$x2013_measured_pin_height_cm <- as.numeric(dat$dat2013$x2013_measured_pin_height_cm)
 
 
 ###############################
@@ -54,11 +53,17 @@ dat$dat2013$x2013_measured_pin_height_cm <- as.numeric(dat$dat2013$x2013_measure
 
 # same thing here; typed NAs
 dat$dat2014 <- dat$dat2014 %>%
-    transmute(pin_height = as.numeric(x2014_measured_pin_height_cm))
+    mutate(pin_height = as.numeric(x2014_measured_pin_height_cm)) %>%
+    select(-x2014_measured_pin_height_cm)
 
 
+###############################
+## Clean up XXXX 
+###############################
 
 
+###############################
+###############################
 
 # join together all the data frames in the list 'dat'
 # this does NOT deal with column class differences
