@@ -5,6 +5,8 @@ output:
     html_document:
         toc: true
         toc_float: true
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -16,10 +18,12 @@ library(tidyverse)
 library(janitor)
 library(knitr)
 library(lubridate)
+library(here)
 ```
 
+
 ```{r data input}
-path <- '../data/intermediate'
+path <- here('data', 'intermediate')
 
 files_to_check <- dir(path)
 
@@ -27,10 +31,10 @@ DEL <- paste0(path, '/DEL.csv')
 SOS <- paste0(path, '/SOS.csv')
 
 ##########################################
-file_of_choice <- SOS
+file_to_read <- SOS
 ##########################################
 
-dat <- read_csv(file_of_choice)
+dat <- read_csv(file_to_read)
 ```
 
 # General  
@@ -98,13 +102,13 @@ dat %>% tabyl(arm_position, pin_number, set_id) %>%
 ggplot(dat) +
     geom_histogram(aes(pin_height), fill = 'navyblue', bins = 50) +
     facet_wrap(~set_id, ncol = 2, scales = 'free_y') +
+    ggtitle('Histograms of Pin Measurements by SET ID') +
     theme_bw()
 ```
 
 # Tests and Checks  
 
 ## Negative Pin Heights  
-
 
 ```{r}
 # check for negative pin heights
@@ -113,6 +117,5 @@ if(sum(dat$pin_height < 0, na.rm = TRUE) > 1) {
     neg_pin_hts <- dat %>% filter(pin_height < 0)
     kable(neg_pin_hts)
     } else {print("all pin heights are >0")}
-
 ```
 
