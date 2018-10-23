@@ -17,12 +17,20 @@ path <- here('data', 'raw_original', 'WAQ.xlsx')
 ##### tasks #######
 
 # make sure the core columns are named the same and have the same class in every sheet
-####### dates, check (?)
+####### dates, done (all Date class)
 ####### pin_height, done
 ####### front_back, done
 
-# figure out which columns have codes and notes
-# select core columns  - mostly done; just need note columns
+# figure out which columns have codes and notes, done
+####### 2013: none; using x_2 because it's column P like all the others (all blank but I want the column header)
+####### 2014: column P; unlabeled; 2nd unlabeled column (row 29 of data has note 'hole': this is x_2)
+####### 2015: column P; labeled 'Notes'
+####### 2016: column P; labeled 'Notes'
+####### 2017: column P; labeled 'Notes'; contains name of reader
+####### 2018: column S; labeled 'Notes'; columns P,Q,R are new: time readings started, reader, recorder, respectively.
+
+
+# make non-core columns consistent (reader, recorder, reading time, etc.)
 # bind all together
 
 
@@ -58,8 +66,9 @@ dat$dat2013$date <- gsub("1020", NA, dat$dat2013$date)  # replace that comment a
 
 dat$dat2013 <- dat$dat2013 %>%
     mutate(date = excel_numeric_to_date(as.numeric(dat$dat2013$date)),
-           pin_height = as.numeric(x2013_measured_pin_height_cm)) %>%
-    select(set_id = set_code, date, arm_position = position, pin_number, pin_height, front_back = f_b)
+           pin_height = as.numeric(x2013_measured_pin_height_cm),
+           notes = x_2) %>%
+    select(set_id = set_code, date, arm_position = position, pin_number, pin_height, front_back = f_b, notes)
 
 
 
@@ -71,8 +80,9 @@ dat$dat2013 <- dat$dat2013 %>%
 dat$dat2014 <- dat$dat2014 %>%
     mutate(date = as.Date(date),
            pin_height = as.numeric(x2014_measured_pin_height_cm),
-           front_back = f_b) %>%
-    select(set_id = set_code, date, arm_position = position, pin_number, pin_height, front_back = f_b)
+           front_back = f_b,
+           notes = x_2) %>%
+    select(set_id = set_code, date, arm_position = position, pin_number, pin_height, front_back = f_b, notes)
 
 
 ###############################
@@ -83,7 +93,7 @@ dat$dat2015 <- dat$dat2015 %>%
     mutate(date = as.Date(date),
            pin_height = as.numeric(x2015_measured_pin_height_cm),
            front_back = f_b) %>%
-    select(set_id = set_code, date, arm_position = position, pin_number, pin_height, front_back = f_b)
+    select(set_id = set_code, date, arm_position = position, pin_number, pin_height, front_back = f_b, notes)
 
 
 ###############################
@@ -94,7 +104,7 @@ dat$dat2016 <- dat$dat2016 %>%
     mutate(date = as.Date(date),
            pin_height = as.numeric(x2016_measured_pin_height_cm),
            front_back = f_b) %>%
-    select(set_id = set_code, date, arm_position = position, pin_number, pin_height, front_back = f_b)
+    select(set_id = set_code, date, arm_position = position, pin_number, pin_height, front_back = f_b, notes)
 
 
 ###############################
@@ -109,7 +119,7 @@ dat$dat2017 <- dat$dat2017 %>%
            front_back = case_when(f_b_front_back == 'F' ~ 'Front',
                                   f_b_front_back == 'B' ~ 'Back',
                                   TRUE ~ f_b_front_back)) %>%
-    select(set_id = set_code, date, arm_position = position, pin_number, pin_height, front_back)
+    select(set_id = set_code, date, arm_position = position, pin_number, pin_height, front_back, notes)
 
 
 ###############################
@@ -122,7 +132,7 @@ dat$dat2018 <- dat$dat2018 %>%
            front_back = case_when(f_b_front_back == 'F' ~ 'Front',
                                   f_b_front_back == 'B' ~ 'Back',
                                   TRUE ~ f_b_front_back)) %>%
-    select(set_id = set_code, date, arm_position = position, pin_number, pin_height, front_back)
+    select(set_id = set_code, date, arm_position = position, pin_number, pin_height, front_back, notes)
 
 ###############################
 ###############################
@@ -130,6 +140,10 @@ dat$dat2018 <- dat$dat2018 %>%
 # join together all the data frames in the list 'dat'
 # this does NOT deal with column class differences
 dat_all <- reshape::merge_recurse(dat) %>%
-    drop_na()
+    mutate(sum_na = is.na(set_id) + is.na(date) + is.na(pin_height)) %>%
+    filter(sum_na <3) %>%
+    select(-sum_na)
+
+
 
 ###
