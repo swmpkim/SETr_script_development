@@ -69,8 +69,8 @@ for(i in seq_along(unique_sets)) {
     
     # generate csv
     write_csv(dat_sub, csvpath)
-
     
+
     ### GENERATE A FORMATTED EXCEL SHEET
     # generate a vector of row numbers to highlight in a formatted Excel sheet
     groupsof4 <- nrow(dat_sub)/4
@@ -107,8 +107,8 @@ for(i in seq_along(unique_sets)) {
     setFillForegroundColor(header, color = XLC$"COLOR.WHITE")
     setBorder(header, 'bottom', type = XLC$"BORDER.DOUBLE", color = XLC$"COLOR.BLACK")
     setCellStyle(wb, sheet = 'data', row = 1, col = colIndex, cellstyle = header)
-    
 
+    
     saveWorkbook(wb)
     
     # might want to look for groupings where SET and date are the same
