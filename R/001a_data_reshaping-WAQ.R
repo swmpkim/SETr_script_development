@@ -15,9 +15,11 @@ path <- here('data', 'raw_original', 'WAQ.xlsx')
 
 
 ##### tasks #######
-# make sure the core columns are named the same in every sheet (biggest discrepancy so far has been pin_height, and that has been fixed)
-# make sure all dates are in same format
-# make sure columns like front/back have the same format in each data frame (some have 'front', others are 'F')
+# make sure the core columns are named the same and have the same class in every sheet
+####### dates, check (?)
+####### pin_height, done
+####### front_back, done
+
 
 
 
@@ -27,19 +29,16 @@ path <- here('data', 'raw_original', 'WAQ.xlsx')
 # set it up
 years <- 2013:2018
 dat <- list()
-colnames <- list()
+
 
 # read in the sheets
 for(i in seq_along(years)){
     dat[[i]] <- read_excel(path, sheet = as.character(years[i])) %>%
         clean_names()
-    colnames[[i]] <- names(dat[[i]])
 }
 
 # name the elements of the list
 names(dat) <- paste0('dat', years)
-names(colnames) <- names(dat)
-
 
 
 
@@ -56,8 +55,9 @@ dat$dat2013$date <- gsub("1020", NA, dat$dat2013$date)  # replace that comment a
 
 dat$dat2013 <- dat$dat2013 %>%
     mutate(date = excel_numeric_to_date(as.numeric(dat$dat2013$date)),
-           pin_height = as.numeric(x2013_measured_pin_height_cm)) %>%
-    select(-x2013_measured_pin_height_cm)
+           pin_height = as.numeric(x2013_measured_pin_height_cm),
+           front_back = f_b) %>%
+    select(-x2013_measured_pin_height_cm, -f_b)
 
 
 
@@ -67,8 +67,9 @@ dat$dat2013 <- dat$dat2013 %>%
 
 # same thing here; typed NAs
 dat$dat2014 <- dat$dat2014 %>%
-    mutate(pin_height = as.numeric(x2014_measured_pin_height_cm)) %>%
-    select(-x2014_measured_pin_height_cm)
+    mutate(pin_height = as.numeric(x2014_measured_pin_height_cm),
+           front_back = f_b) %>%
+    select(-x2014_measured_pin_height_cm, -f_b)
 
 
 ###############################
@@ -76,8 +77,9 @@ dat$dat2014 <- dat$dat2014 %>%
 ###############################
 
 dat$dat2015 <- dat$dat2015 %>%
-    mutate(pin_height = as.numeric(x2015_measured_pin_height_cm)) %>%
-    select(-x2015_measured_pin_height_cm)
+    mutate(pin_height = as.numeric(x2015_measured_pin_height_cm),
+           front_back = f_b) %>%
+    select(-x2015_measured_pin_height_cm, -f_b)
 
 
 ###############################
@@ -85,8 +87,9 @@ dat$dat2015 <- dat$dat2015 %>%
 ###############################
 
 dat$dat2016 <- dat$dat2016 %>%
-    mutate(pin_height = as.numeric(x2016_measured_pin_height_cm)) %>%
-    select(-x2016_measured_pin_height_cm)
+    mutate(pin_height = as.numeric(x2016_measured_pin_height_cm),
+           front_back = f_b) %>%
+    select(-x2016_measured_pin_height_cm, -f_b)
 
 
 ###############################
@@ -96,8 +99,11 @@ dat$dat2016 <- dat$dat2016 %>%
 # for now only focusing on the main data table
 
 dat$dat2017 <- dat$dat2017 %>%
-    mutate(pin_height = as.numeric(pin_length)) %>%
-    select(-pin_length)
+    mutate(pin_height = as.numeric(pin_length),
+           front_back = case_when(f_b_front_back == 'F' ~ 'Front',
+                                  f_b_front_back == 'B' ~ 'Back',
+                                  TRUE ~ f_b_front_back)) %>%
+    select(-pin_length, -f_b_front_back)
 
 
 ###############################
@@ -105,8 +111,11 @@ dat$dat2017 <- dat$dat2017 %>%
 ###############################
 
 dat$dat2018 <- dat$dat2018 %>%
-    mutate(pin_height = as.numeric(pin_length_cm)) %>%
-    select(-pin_length_cm)
+    mutate(pin_height = as.numeric(pin_length_cm),
+           front_back = case_when(f_b_front_back == 'F' ~ 'Front',
+                                  f_b_front_back == 'B' ~ 'Back',
+                                  TRUE ~ f_b_front_back)) %>%
+    select(-pin_length_cm, -f_b_front_back)
 
 ###############################
 ###############################
