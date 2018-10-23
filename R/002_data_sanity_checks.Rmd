@@ -29,9 +29,10 @@ files_to_check <- dir(path)
 
 DEL <- paste0(path, '/DEL.csv')
 SOS <- paste0(path, '/SOS.csv')
+WAQ <- paste0(path, '/WAQ.csv')
 
 ##########################################
-file_to_read <- SOS
+file_to_read <- WAQ
 ##########################################
 
 dat <- read_csv(file_to_read)

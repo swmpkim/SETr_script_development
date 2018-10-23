@@ -140,10 +140,11 @@ dat$dat2018 <- dat$dat2018 %>%
 # join together all the data frames in the list 'dat'
 # this does NOT deal with column class differences
 dat_all <- reshape::merge_recurse(dat) %>%
-    mutate(sum_na = is.na(set_id) + is.na(date) + is.na(pin_height)) %>%
+    mutate(sum_na = is.na(set_id) + is.na(date) + is.na(pin_height),
+           reserve = 'WAQ') %>%
     filter(sum_na <3) %>%
-    select(-sum_na)
+    select(reserve, everything(), -sum_na)
 
-
+write_csv(dat_all, here('data', 'intermediate', 'WAQ.csv'))
 
 ###
