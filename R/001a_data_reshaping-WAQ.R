@@ -130,7 +130,7 @@ dat$dat2018 <- dat$dat2018 %>%
 # join together all the data frames in the list 'dat'
 # this does NOT deal with column class differences
 dat_all <- reshape::merge_recurse(dat) %>%
-    na.omit()
+    drop_na()
 
 ###
 
