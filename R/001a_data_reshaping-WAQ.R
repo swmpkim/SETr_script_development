@@ -13,21 +13,35 @@ library(here)
 
 path <- here('data', 'raw_original', 'WAQ.xlsx')
 
+
+##### tasks #######
+# make sure the core columns are named the same in every sheet (biggest discrepancy so far has been pin_height, and that has been fixed)
+# make sure all dates are in same format
+# make sure columns like front/back have the same format in each data frame (some have 'front', others are 'F')
+
+
+
 # read tabular data
 
 # every sheet (named by years) will be an element of a list
 # set it up
 years <- 2013:2018
 dat <- list()
+colnames <- list()
 
 # read in the sheets
 for(i in seq_along(years)){
     dat[[i]] <- read_excel(path, sheet = as.character(years[i])) %>%
         clean_names()
+    colnames[[i]] <- names(dat[[i]])
 }
 
 # name the elements of the list
 names(dat) <- paste0('dat', years)
+names(colnames) <- names(dat)
+
+
+
 
 # split the list up into separate data frames
 #  list2env(dat, envir = .GlobalEnv)  # this actually isn't a great idea
@@ -58,9 +72,41 @@ dat$dat2014 <- dat$dat2014 %>%
 
 
 ###############################
-## Clean up XXXX 
+## Clean up 2015 
 ###############################
 
+dat$dat2015 <- dat$dat2015 %>%
+    mutate(pin_height = as.numeric(x2015_measured_pin_height_cm)) %>%
+    select(-x2015_measured_pin_height_cm)
+
+
+###############################
+## Clean up 2016 
+###############################
+
+dat$dat2016 <- dat$dat2016 %>%
+    mutate(pin_height = as.numeric(x2016_measured_pin_height_cm)) %>%
+    select(-x2016_measured_pin_height_cm)
+
+
+###############################
+## Clean up 2017
+###############################
+# this one will be tougher because of the cross-comparisons between readers
+# for now only focusing on the main data table
+
+dat$dat2017 <- dat$dat2017 %>%
+    mutate(pin_height = as.numeric(pin_length)) %>%
+    select(-pin_length)
+
+
+###############################
+## Clean up 2018
+###############################
+
+dat$dat2018 <- dat$dat2018 %>%
+    mutate(pin_height = as.numeric(pin_length_cm)) %>%
+    select(-pin_length_cm)
 
 ###############################
 ###############################
