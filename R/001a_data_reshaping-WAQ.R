@@ -141,7 +141,8 @@ dat$dat2018 <- dat$dat2018 %>%
 # this does NOT deal with column class differences
 dat_all <- reshape::merge_recurse(dat) %>%
     mutate(sum_na = is.na(set_id) + is.na(date) + is.na(pin_height),
-           reserve = 'WAQ') %>%
+           reserve = 'WAQ',
+           date = ymd(date)) %>%
     filter(sum_na <3) %>%
     select(reserve, everything(), -sum_na)
 
