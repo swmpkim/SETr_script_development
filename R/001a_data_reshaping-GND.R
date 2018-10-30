@@ -58,6 +58,25 @@ dat$set_id <- gsub('SPAL', 'SPALT', dat$set_id)
 unique_sets <- unique(dat$set_id)
 
 
+################################
+# PUT INTO LONG FORMAT FOR SETr
+################################
+
+
+dat_long <- dat %>%
+    gather(key = pin_number, value = pin_height,
+          -reserve, -set_id, -arm_position, -date) %>%
+    filter(grepl('f_', .$pin_number) == FALSE) %>%
+    arrange(set_id, date, arm_position, pin_number)
+
+outpath <- here('data', 'intermediate', 'GND.csv')
+write_csv(dat_long, outpath)
+
+
+
+################################
+# SPLIT INTO INDIVIDUAL FILES
+################################
 
 for(i in seq_along(unique_sets)) {
     dat_sub <- dat[dat$set_id == unique_sets[i], ]
