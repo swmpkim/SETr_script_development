@@ -12,14 +12,16 @@ path <- here('data', 'intermediate', 'GND.csv')
 
 # read in data
 dat_full <- read_csv(path)
+dat <- dat_full %>%
+    filter(set_id %in% c('SPALT-1', 'SPALT-2', 'SPALT-3'))
 
 
 ### generate some of the tables and graphs from the NPS spreadsheet
 ####################################################################
 # cumulative change
-calc_change_cumu(dat_full)
+calc_change_cumu(dat)
 # incremental change
-calc_change_incr(dat_full)
+calc_change_incr(dat)
 
 
 ######################################
@@ -29,6 +31,8 @@ calc_change_incr(dat_full)
 # really i hope to do these in shiny, and the user can select what they want to see
 # which SET, which level (pin/arm/set), etc
 ######################################
+
+
 
 
 
@@ -46,13 +50,23 @@ change_cumu_arm %>%
     gather(key = summary_stat, value = value, mean_cumu, sd_cumu, se_cumu) %>%
     spread(key = date, value = value) %>%
     print()
+ggplot(change_cumu_arm) +
+    geom_point(aes(x = date, y = mean_cumu, col = arm_position), size = 2) +
+    facet_grid(~set_id) +
+    theme_bw()
     
 # by SET
 change_cumu_set %>%
     gather(key = summary_stat, value = value, mean_cumu, sd_cumu, se_cumu) %>%
     spread(key = date, value = value) %>%
     print()
-
+ggplot(change_cumu_set, aes(x = date, y = mean_cumu)) +
+    geom_line(col = 'gray80') +
+    geom_point(col = 'cadetblue3', size = 2) +
+    geom_smooth(se = FALSE, method = 'lm', col = 'gray60', lty = 2) +
+    facet_grid(~set_id) +
+    labs(title = 'Cumulative Change since first reading') +
+    theme_bw()
 
 
 ####################################################################
