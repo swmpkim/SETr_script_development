@@ -13,8 +13,20 @@ path <- here('data', 'intermediate', 'GND.csv')
 # read in data
 dat_full <- read_csv(path)
 dat <- dat_full %>%
-    filter(set_id %in% c('SPALT-1', 'SPALT-2', 'SPALT-3'))
+    filter(set_id == "SPALT-2")
 
+
+
+# graphs of raw pin readings (not cumulative change; just the raw readings)
+dat %>%
+    group_by(set_id, arm_position, date) %>%
+    summarize(mean = mean(pin_height, na.rm = TRUE)) %>%
+    ggplot(aes(x = date, y = mean, col = arm_position)) +
+    geom_point(size = 2.5) +
+    geom_line(alpha = 0.6) +
+    facet_wrap(~set_id, ncol = 1, scales = 'free_y') +
+    ggtitle('Pin Height (raw measurement)') +
+    theme_bw()
 
 ### generate some of the tables and graphs from the NPS spreadsheet
 ####################################################################
@@ -50,9 +62,11 @@ change_cumu_arm %>%
     gather(key = summary_stat, value = value, mean_cumu, sd_cumu, se_cumu) %>%
     spread(key = date, value = value) %>%
     print()
-ggplot(change_cumu_arm) +
-    geom_point(aes(x = date, y = mean_cumu, col = arm_position), size = 2) +
-    facet_grid(~set_id) +
+ggplot(change_cumu_arm, aes(x = date, y = mean_cumu, col = arm_position)) +
+    geom_point(size = 2) +
+    geom_line() +
+    facet_wrap(~set_id, ncol = 1) +
+    ggtitle('Cumulative Change') +
     theme_bw()
     
 # by SET
@@ -64,7 +78,7 @@ ggplot(change_cumu_set, aes(x = date, y = mean_cumu)) +
     geom_line(col = 'gray80') +
     geom_point(col = 'cadetblue3', size = 2) +
     geom_smooth(se = FALSE, method = 'lm', col = 'gray60', lty = 2) +
-    facet_grid(~set_id) +
+    facet_wrap(~set_id, ncol = 1) +
     labs(title = 'Cumulative Change since first reading') +
     theme_bw()
 
