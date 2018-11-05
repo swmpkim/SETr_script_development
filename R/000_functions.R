@@ -31,7 +31,7 @@ calc_change_cumu <- function(dat) {
         select(-arm_position, mean_value = mean_cumu) %>%
         summarize(mean_cumu = mean(mean_value, na.rm = TRUE),
                   sd_cumu = sd(mean_value, na.rm = TRUE),
-                  se_cumu = sd(mean_value, na.rm = TRUE)/sqrt(length(!is.na(mean_cumu)))) %>%
+                  se_cumu = sd(mean_value, na.rm = TRUE)/sqrt(length(!is.na(mean_value)))) %>%
         ungroup()
     
 }
@@ -67,6 +67,6 @@ calc_change_incr <- function(dat){
         select(-arm_position, mean_value = mean_incr) %>%
         summarize(mean_incr = mean(mean_value, na.rm = TRUE),
                   sd_incr = sd(mean_value, na.rm = TRUE),
-                  se_incr = sd(mean_value, na.rm = TRUE)/sqrt(length(!is.na(mean_incr)))) %>%
+                  se_incr = sd(mean_value, na.rm = TRUE)/sqrt(length(!is.na(mean_value)))) %>%
         ungroup()
 }
