@@ -3,6 +3,8 @@ library(lubridate)
 library(here)
 library(knitr)
 
+funs_path <- here('R', '000_functions.R')
+source(funs_path)
 
 # pick a reserve
 # (can we do this in shiny?)
@@ -12,61 +14,65 @@ path <- here('data', 'intermediate', 'GND.csv')
 dat_full <- read_csv(path)
 
 
-# pick a station
-# (should be able to do this in shiny)
-dat <- dat_full %>%
-    filter(set_id == 'SPALT-1')
+### generate some of the tables and graphs from the NPS spreadsheet
+####################################################################
+# cumulative change
+calc_change_cumu(dat_full)
+# incremental change
+calc_change_incr(dat_full)
 
 
-# generate some of the tables and graphs from the NPS spreadsheet
+######################################
+# it's going to be best to only print these tables for one SET at a time
+# because with dates as column headers, and different dates that different SETs are read,
+# it gets a bit crazy
+# really i hope to do these in shiny, and the user can select what they want to see
+# which SET, which level (pin/arm/set), etc
+######################################
 
 
-#### Cumulative change (change since first reading) - by pin
 
-change_cumulative_pin <- dat %>%
-    group_by(reserve, set_id, arm_position, pin_number) %>%
-    mutate(cumulative = pin_height - pin_height[1]) %>%
-    select(-pin_height) %>%
-    ungroup()
+####################################################################
+### View cumulative change, with dates along the top and groups as rows
+####################################################################
 
-# view it, with dates along the top and pins as rows
-change_cumulative_pin %>%
-    spread(key = date, value = cumulative) %>%
+# by pin
+change_cumu_pin %>%
+    spread(key = date, value = cumu) %>%
     print()
 
-#### Avg change since first reading by arm
-#### in spreadsheets, this is average of 9 pin values in an arm for each date
-#### so that's how it is here too  
-
-change_cumulative_arm <- change_cumulative_pin %>%
-    group_by(reserve, set_id, arm_position, date) %>%
-    select(-pin_number) %>%
-    summarize(mean_cumulative = mean(cumulative, na.rm = TRUE),
-              sd_cumulative = sd(cumulative, na.rm = TRUE),
-              se_cumulative = sd(cumulative, na.rm = TRUE)/sqrt(length(!is.na(cumulative)))) %>%
-    ungroup()
-
-# view it, with dates along the top and arms as rows
-change_cumulative_arm %>%
-    gather(key = summary_stat, value = value, mean_cumulative, sd_cumulative, se_cumulative) %>%
+# by arm
+change_cumu_arm %>%
+    gather(key = summary_stat, value = value, mean_cumu, sd_cumu, se_cumu) %>%
     spread(key = date, value = value) %>%
     print()
     
-
-#### Avg change since first reading by SET
-#### this is the average of the 4 arm positions
-
-change_cumulative_set <- change_cumulative_arm %>%
-    group_by(reserve, set_id, date) %>%
-    select(-arm_position, mean_value = mean_cumulative) %>%
-    summarize(mean_cumulative = mean(mean_value, na.rm = TRUE),
-              sd_cumulative = sd(mean_value, na.rm = TRUE),
-              se_cumulative = sd(mean_value, na.rm = TRUE)/sqrt(length(!is.na(mean_cumulative)))) %>%
-    ungroup()
-
-
-# view it, with dates along the top and sets as rows
-change_cumulative_set %>%
-    gather(key = summary_stat, value = value, mean_cumulative, sd_cumulative, se_cumulative) %>%
+# by SET
+change_cumu_set %>%
+    gather(key = summary_stat, value = value, mean_cumu, sd_cumu, se_cumu) %>%
     spread(key = date, value = value) %>%
     print()
+
+
+
+####################################################################
+### View incremental change (change since last reading), with dates along the top and groups as rows
+####################################################################
+
+# by pin
+change_incr_pin %>%
+    spread(key = date, value = incr) %>%
+    print()
+
+# by arm
+change_incr_arm %>%
+    gather(key = summary_stat, value = value, mean_incr, sd_incr, se_incr) %>%
+    spread(key = date, value = value) %>%
+    print()
+
+# by SET
+change_incr_set %>%
+    gather(key = summary_stat, value = value, mean_incr, sd_incr, se_incr) %>%
+    spread(key = date, value = value) %>%
+    print()
+
