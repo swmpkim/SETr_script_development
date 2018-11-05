@@ -8,12 +8,14 @@ source(funs_path)
 
 # pick a reserve
 # (can we do this in shiny?)
-path <- here('data', 'intermediate', 'GND.csv')
+path <- here('data', 'intermediate', 'DEL.csv')
 
 # read in data
 dat_full <- read_csv(path)
 dat <- dat_full %>%
-    filter(set_id == "SPALT-2")
+    filter(set_id == "Boardwalk")
+
+# dat <- dat_full
 
 
 
@@ -65,7 +67,7 @@ change_cumu_arm %>%
 ggplot(change_cumu_arm, aes(x = date, y = mean_cumu, col = arm_position)) +
     geom_point(size = 2) +
     geom_line() +
-    facet_wrap(~set_id, ncol = 1) +
+    facet_wrap(~set_id, ncol = 1, scales = 'free_y') +
     ggtitle('Cumulative Change') +
     theme_bw()
     
@@ -78,7 +80,7 @@ ggplot(change_cumu_set, aes(x = date, y = mean_cumu)) +
     geom_line(col = 'gray80') +
     geom_point(col = 'cadetblue3', size = 2) +
     geom_smooth(se = FALSE, method = 'lm', col = 'gray60', lty = 2) +
-    facet_wrap(~set_id, ncol = 1) +
+    facet_wrap(~set_id, ncol = 1, scales = 'free_y') +
     labs(title = 'Cumulative Change since first reading') +
     theme_bw()
 

@@ -12,7 +12,7 @@ calc_change_cumu <- function(dat) {
     # by pin
     change_cumu_pin <<- dat %>%
         group_by(reserve, set_id, arm_position, pin_number) %>%
-        mutate(cumu = pin_height - pin_height[1]) %>%
+        mutate(cumu = pin_height - pin_height[1]) %>% ##### need to make this the first pin reading that's not NA - not just [1]
         select(-pin_height) %>%
         ungroup()
     

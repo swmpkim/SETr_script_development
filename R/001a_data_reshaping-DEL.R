@@ -135,7 +135,8 @@ sum(dat_coded$code == 'other, not in key')
 # change names to be slightly more consistent
 # also get rid of any extra rows
 dat_coded <- dat_coded %>%
-    select(set_id = site_label, date, arm_position = set_arm_position, pin_number = set_pin_no, pin_height = pin_measurement_mm, code, notes, latitude, longitude) %>%
+    mutate(reserve = 'DEL') %>%
+    select(reserve, set_id = site_label, date, arm_position = set_arm_position, pin_number = set_pin_no, pin_height = pin_measurement_mm, code, notes, latitude, longitude) %>%
     filter(is.na(set_id) == FALSE)
 
 # spit out csv file
