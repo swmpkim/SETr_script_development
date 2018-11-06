@@ -60,6 +60,11 @@ for(i in seq_along(sheetnames)){
 
 dat_all <- reshape::merge_recurse(dat)
 
+
+## if pin height isn't a number, make it an na (there are some comments)
+dat_all <- dat_all %>%
+    mutate(pin_height = as.numeric(pin_height))  # introduces NAs and that's okay
+
 # spit it back out
 path_out <- here('data', 'intermediate', 'PAD.csv')
 write_csv(dat_all, path_out)
