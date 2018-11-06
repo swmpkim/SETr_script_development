@@ -8,15 +8,16 @@ source(funs_path)
 
 # pick a reserve
 # (can we do this in shiny?)
-path <- here('data', 'intermediate', 'DEL.csv')
+path <- here('data', 'intermediate', 'WAQ.csv')
 
 # read in data
 dat_full <- read_csv(path)
 
-dat <- dat_full %>%
-    filter(set_id %in% c("Delon_Deep","Delon_Shallow"))
+# wonky site at DEL
+# dat <- dat_full %>%
+#    filter(set_id %in% c("Delon_Deep","Delon_Shallow"))
 
-# dat <- dat_full
+dat <- dat_full
 
 
 
@@ -24,7 +25,7 @@ dat <- dat_full %>%
 dat %>%
     group_by(set_id, arm_position, date) %>%
     summarize(mean = mean(pin_height, na.rm = TRUE)) %>%
-    ggplot(aes(x = date, y = mean, col = arm_position)) +
+    ggplot(aes(x = date, y = mean, col = as.factor(arm_position))) +
     geom_point(size = 2.5) +
     geom_line(alpha = 0.6) +
     facet_wrap(~set_id, ncol = 2, scales = 'free_y') +
@@ -88,7 +89,7 @@ change_cumu_arm %>%
     gather(key = summary_stat, value = value, mean_cumu, sd_cumu, se_cumu) %>%
     spread(key = date, value = value) %>%
     print()
-ggplot(change_cumu_arm, aes(x = date, y = mean_cumu, col = arm_position)) +
+ggplot(change_cumu_arm, aes(x = date, y = mean_cumu, col = as.factor(arm_position))) +
     geom_point(size = 2) +
     geom_line() +
     facet_wrap(~set_id, ncol = 2, scales = 'free_y') +
@@ -101,12 +102,12 @@ change_cumu_set %>%
     spread(key = date, value = value) %>%
     print()
 ggplot(change_cumu_set, aes(x = date, y = mean_cumu)) +
-    geom_line(col = 'gray80') +
+    geom_line(col = 'gray60') +
     geom_point(col = 'cadetblue3', size = 2) +
-    geom_smooth(se = FALSE, method = 'lm', col = 'gray60', lty = 2) +
-    facet_wrap(~set_id, ncol = 1, scales = 'free_y') +
-    labs(title = 'Cumulative Change since first reading') +
-    theme_bw()
+    geom_smooth(se = FALSE, method = 'lm', col = 'gray70', lty = 2) +
+    facet_wrap(~set_id, ncol = 2, scales = 'free_y') +
+    labs(title = 'Cumulative Change since first reading', subtitle = 'dashed line is linear regression') +
+    theme_classic()
 
 
 ####################################################################
