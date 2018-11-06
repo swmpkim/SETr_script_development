@@ -13,8 +13,8 @@ path <- here('data', 'intermediate', 'DEL.csv')
 # read in data
 dat_full <- read_csv(path)
 
-dat <- dat_full # %>%
-    # filter(set_id == "CLMAJ-1")
+dat <- dat_full %>%
+    filter(set_id %in% c("Delon_Deep","Delon_Shallow"))
 
 # dat <- dat_full
 
@@ -28,6 +28,29 @@ dat %>%
     geom_point(size = 2.5) +
     geom_line(alpha = 0.6) +
     facet_wrap(~set_id, ncol = 2, scales = 'free_y') +
+    ggtitle('Pin Height (raw measurement)') +
+    theme_bw()
+
+
+# not with free-y scales
+dat %>%
+    group_by(set_id, arm_position, date) %>%
+    summarize(mean = mean(pin_height, na.rm = TRUE)) %>%
+    ggplot(aes(x = date, y = mean, col = arm_position)) +
+    geom_point(size = 2.5) +
+    geom_line(alpha = 0.6) +
+    facet_wrap(~set_id, ncol = 2) +
+    ggtitle('Pin Height (raw measurement)') +
+    theme_bw()
+
+
+# individual pins
+dat %>%
+    group_by(set_id, arm_position, pin_number, date) %>%
+    ggplot(aes(x = date, y = pin_height, col = as.factor(pin_number))) +
+    geom_point(size = 2.5) +
+    geom_line(alpha = 0.6) +
+    facet_wrap(arm_position~set_id, ncol = 2) +
     ggtitle('Pin Height (raw measurement)') +
     theme_bw()
 
