@@ -3,18 +3,33 @@ library(lubridate)
 library(here)
 library(knitr)
 
+################################################
+#### Specify the reserve
+################################################
+reserve <- 'GND'
+
+
+
+# source functions script
 funs_path <- here('R', '000_functions.R')
 source(funs_path)
 
-
-#### one challenge is that some reserves have data in mm and others are in cm
-
-# pick a reserve
-# (can we do this in shiny?)
-path <- here('data', 'intermediate', 'PAD.csv')
-
 # read in data
+path <- here('data', 'intermediate', paste0(reserve, '.csv'))
 dat_full <- read_csv(path)
+
+
+# make sure pin heights are in mm so flagging works properly
+if(exists('pin_height_cm', dat_full)) {
+dat_full <- dat_full %>%
+    mutate(pin_height = pin_height_cm * 10) %>%
+    select(-pin_height_cm)
+}
+if(exists('pin_height_mm', dat_full)){
+    dat_full <- dat_full %>%
+        mutate(pin_height = pin_height_mm) %>%
+        select(-pin_height_cm)
+}
 
 # wonky site at DEL
 # dat <- dat_full %>%
@@ -149,18 +164,18 @@ change_incr_arm %>%
     print()
 ggplot(change_incr_arm, aes(x = date, y = mean_incr, col = as.factor(arm_position))) +
     geom_point(size = 2) +
-    geom_hline(yintercept = 2.5, col = "red") +
-    geom_hline(yintercept = -2.5, col = "red") +
+    geom_hline(yintercept = 25, col = "red") +
+    geom_hline(yintercept = -25, col = "red") +
     facet_wrap(~set_id, ncol = 2, scales = 'free_y') +
-    ggtitle('Incremental Change', subtitle = 'red lines at +/- 2.5 cm') +
+    ggtitle('Incremental Change', subtitle = 'red lines at +/- 25 mm') +
     theme_bw()
 # 4 columns
 ggplot(change_incr_arm, aes(x = date, y = mean_incr, col = as.factor(arm_position))) +
     geom_point(size = 2) +
-    geom_hline(yintercept = 2.5, col = "red") +
-    geom_hline(yintercept = -2.5, col = "red") +
+    geom_hline(yintercept = 25, col = "red") +
+    geom_hline(yintercept = -25, col = "red") +
     facet_wrap(~set_id, ncol = 4) +
-    ggtitle('Incremental Change', subtitle = 'red lines at +/- 2.5 cm') +
+    ggtitle('Incremental Change', subtitle = 'red lines at +/- 25 mm') +
     theme_bw()
 
 # by SET
