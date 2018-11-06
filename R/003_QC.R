@@ -6,9 +6,12 @@ library(knitr)
 funs_path <- here('R', '000_functions.R')
 source(funs_path)
 
+
+#### one challenge is that some reserves have data in mm and others are in cm
+
 # pick a reserve
 # (can we do this in shiny?)
-path <- here('data', 'intermediate', 'WAQ.csv')
+path <- here('data', 'intermediate', 'PAD.csv')
 
 # read in data
 dat_full <- read_csv(path)
@@ -44,6 +47,16 @@ dat %>%
     ggtitle('Pin Height (raw measurement)') +
     theme_bw()
 
+# 4 columns, which is better when there are a lot of SETs (ahem, PAD)
+dat %>%
+    group_by(set_id, arm_position, date) %>%
+    summarize(mean = mean(pin_height, na.rm = TRUE)) %>%
+    ggplot(aes(x = date, y = mean, col = as.factor(arm_position))) +
+    geom_point(size = 2.5) +
+    geom_line(alpha = 0.6) +
+    facet_wrap(~set_id, ncol = 4, scales = 'free_y') +
+    ggtitle('Pin Height (raw measurement)') +
+    theme_bw()
 
 # individual pins
 dat %>%
@@ -110,6 +123,16 @@ ggplot(change_cumu_set, aes(x = date, y = mean_cumu)) +
     theme_classic()
 
 
+# 4 columns, which is better when there are a lot of SETs (ahem, PAD)
+ggplot(change_cumu_set, aes(x = date, y = mean_cumu)) +
+    geom_line(col = 'gray60') +
+    geom_point(col = 'cadetblue3', size = 2) +
+    geom_smooth(se = FALSE, method = 'lm', col = 'gray70', lty = 2) +
+    facet_wrap(~set_id, ncol = 4, scales = 'free_y') +
+    labs(title = 'Cumulative Change since first reading', subtitle = 'dashed line is linear regression') +
+    theme_classic()
+
+
 ####################################################################
 ### View incremental change (change since last reading), with dates along the top and groups as rows
 ####################################################################
@@ -124,6 +147,21 @@ change_incr_arm %>%
     gather(key = summary_stat, value = value, mean_incr, sd_incr, se_incr) %>%
     spread(key = date, value = value) %>%
     print()
+ggplot(change_incr_arm, aes(x = date, y = mean_incr, col = as.factor(arm_position))) +
+    geom_point(size = 2) +
+    geom_hline(yintercept = 2.5, col = "red") +
+    geom_hline(yintercept = -2.5, col = "red") +
+    facet_wrap(~set_id, ncol = 2, scales = 'free_y') +
+    ggtitle('Incremental Change', subtitle = 'red lines at +/- 2.5 cm') +
+    theme_bw()
+# 4 columns
+ggplot(change_incr_arm, aes(x = date, y = mean_incr, col = as.factor(arm_position))) +
+    geom_point(size = 2) +
+    geom_hline(yintercept = 2.5, col = "red") +
+    geom_hline(yintercept = -2.5, col = "red") +
+    facet_wrap(~set_id, ncol = 4) +
+    ggtitle('Incremental Change', subtitle = 'red lines at +/- 2.5 cm') +
+    theme_bw()
 
 # by SET
 change_incr_set %>%
