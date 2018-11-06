@@ -143,6 +143,7 @@ dat_all <- reshape::merge_recurse(dat) %>%
     mutate(sum_na = is.na(set_id) + is.na(date) + is.na(pin_height),
            reserve = 'WAQ',
            date = ymd(date)) %>%
+    rename(pin_height_cm = pin_height) %>%
     filter(sum_na <3) %>%
     select(reserve, everything(), -sum_na)
 

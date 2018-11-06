@@ -6,7 +6,7 @@ library(knitr)
 ################################################
 #### Specify the reserve
 ################################################
-reserve <- 'GND'
+reserve <- 'WAQ'
 
 
 
@@ -28,7 +28,7 @@ dat_full <- dat_full %>%
 if(exists('pin_height_mm', dat_full)){
     dat_full <- dat_full %>%
         mutate(pin_height = pin_height_mm) %>%
-        select(-pin_height_cm)
+        select(-pin_height_mm)
 }
 
 # wonky site at DEL
@@ -36,6 +36,14 @@ if(exists('pin_height_mm', dat_full)){
 #    filter(set_id %in% c("Delon_Deep","Delon_Shallow"))
 
 dat <- dat_full
+
+
+### generate some of the tables and graphs from the NPS spreadsheet
+####################################################################
+# cumulative change
+calc_change_cumu(dat)
+# incremental change
+calc_change_incr(dat)
 
 
 
@@ -83,12 +91,6 @@ dat %>%
     ggtitle('Pin Height (raw measurement)') +
     theme_bw()
 
-### generate some of the tables and graphs from the NPS spreadsheet
-####################################################################
-# cumulative change
-calc_change_cumu(dat)
-# incremental change
-calc_change_incr(dat)
 
 
 ######################################

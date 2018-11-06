@@ -64,7 +64,7 @@ unique_sets <- unique(dat$set_id)
 
 
 dat_long <- dat %>%
-    gather(key = pin_number, value = pin_height,
+    gather(key = pin_number, value = pin_height_mm,
           -reserve, -set_id, -arm_position, -date) %>%
     filter(grepl('f_', .$pin_number) == FALSE) %>%
     arrange(set_id, date, arm_position, pin_number)

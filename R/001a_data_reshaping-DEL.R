@@ -146,7 +146,7 @@ dat_coded <- dat_coded %>%
     filter(is.na(site_label) == FALSE) %>%
     mutate(reserve = 'DEL',
            set_id = paste0(site_label, '_', type)) %>%
-    select(reserve, set_id, date, arm_position = set_arm_position, pin_number = set_pin_no, pin_height = pin_measurement_mm, code, notes, latitude, longitude) 
+    select(reserve, set_id, date, arm_position = set_arm_position, pin_number = set_pin_no, pin_height_mm = pin_measurement_mm, code, notes, latitude, longitude) 
 
 # spit out csv file
 write_csv(dat_coded, 'data/intermediate/DEL.csv')

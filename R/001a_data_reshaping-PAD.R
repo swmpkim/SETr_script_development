@@ -63,7 +63,8 @@ dat_all <- reshape::merge_recurse(dat)
 
 ## if pin height isn't a number, make it an na (there are some comments)
 dat_all <- dat_all %>%
-    mutate(pin_height = as.numeric(pin_height))  # introduces NAs and that's okay
+    mutate(pin_height_cm = as.numeric(pin_height)) %>%  # introduces NAs and that's okay
+    select(-pin_height)
 
 # spit it back out
 path_out <- here('data', 'intermediate', 'PAD.csv')

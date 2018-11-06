@@ -24,9 +24,9 @@ dat_long <- dat %>%
            -reserve, -set_id, -position, -date, -comments) %>%
     separate(pin, into = c('pin', 'pin_number', 'unit'), sep = '_') %>%
     spread(key = unit, value = value) %>%
-    mutate(pin_height = mm,
+    mutate(pin_height_mm = mm,
            mm = NULL) %>%
-    select(reserve, set_id, date, arm_position = position, pin_number, pin_height, code, comments)
+    select(reserve, set_id, date, arm_position = position, pin_number, pin_height_mm, code, comments)
 
 write_csv(dat_long, 'data/intermediate/SOS.csv')
 
