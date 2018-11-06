@@ -6,7 +6,7 @@ library(knitr)
 ################################################
 #### Specify the reserve
 ################################################
-reserve <- 'WAQ'
+reserve <- 'GND'
 
 
 
@@ -148,6 +148,25 @@ ggplot(change_cumu_set, aes(x = date, y = mean_cumu)) +
     facet_wrap(~set_id, ncol = 4, scales = 'free_y') +
     labs(title = 'Cumulative Change since first reading', subtitle = 'dashed line is linear regression') +
     theme_classic()
+
+# 3 columns, for those of us with sites of 3
+ggplot(change_cumu_set, aes(x = date, y = mean_cumu)) +
+    geom_line(col = 'gray60') +
+    geom_point(col = 'cadetblue3', size = 2) +
+    geom_smooth(se = FALSE, method = 'lm', col = 'gray70', lty = 2) +
+    facet_wrap(~set_id, ncol = 3, scales = 'free_y') +
+    labs(title = 'Cumulative Change since first reading', subtitle = 'dashed line is linear regression') +
+    theme_classic()
+###### some different color choices in this one:
+# same, but y-scale not free
+ggplot(change_cumu_set, aes(x = date, y = mean_cumu)) +
+    geom_line(col = 'gray40') +
+    geom_point(col = 'cadetblue3', size = 2) +
+    geom_smooth(se = FALSE, method = 'lm', col = 'darkslategray', lty = 2) +
+    facet_wrap(~set_id, ncol = 3) +
+    labs(title = 'Cumulative Change since first reading', subtitle = 'dashed line is linear regression') +
+    theme_classic()
+
 
 
 ####################################################################
