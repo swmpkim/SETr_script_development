@@ -6,13 +6,31 @@
 ## calculate all levels of cumulative change, in one function?
 ## returns three data frames (puts them into the Global Environment)
 
+# test
+if(exists('dat')){
+change_cumu_test_pin <<- dat %>%
+    group_by(reserve, set_id, arm_position, pin_number) %>%
+    mutate(cumu = pin_height - pin_height[min(which(!is.na(pin_height)))]) %>% ##### need to make this the first pin reading that's not NA - not just [1]
+    select(-pin_height) %>%
+    ungroup()
+
+change_cumu_test_arm <<- change_cumu_test_pin %>%
+    group_by(reserve, set_id, arm_position, date) %>%
+    select(-pin_number) %>%
+    summarize(mean_cumu = mean(cumu, na.rm = TRUE),
+              sd_cumu = sd(cumu, na.rm = TRUE),
+              se_cumu = sd(cumu, na.rm = TRUE)/sqrt(length(!is.na(cumu)))) %>%
+    ungroup()
+}
+
 ## going to need better documentation, like what kind of data frame is needed as input (long); what column names are required; maybe some if statements to throw errors
 
 calc_change_cumu <- function(dat) {
     # by pin
     change_cumu_pin <<- dat %>%
         group_by(reserve, set_id, arm_position, pin_number) %>%
-        mutate(cumu = pin_height - pin_height[1]) %>% ##### need to make this the first pin reading that's not NA - not just [1]
+        mutate(cumu = pin_height - pin_height[1]) %>% ##### if there are nas in the first pin reading, maybe those pins should be excluded from further aggregation (at least this type of agg) - this will make those pins NA all the way through
+        # mutate(cumu = pin_height - pin_height[min(which(!is.na(pin_height)))]) %>% ##### subtract off the first pin reading that's not NA
         select(-pin_height) %>%
         ungroup()
     

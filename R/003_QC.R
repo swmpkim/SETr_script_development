@@ -8,12 +8,13 @@ source(funs_path)
 
 # pick a reserve
 # (can we do this in shiny?)
-path <- here('data', 'intermediate', 'DEL.csv')
+path <- here('data', 'intermediate', 'TEST.csv')
 
 # read in data
 dat_full <- read_csv(path)
+
 dat <- dat_full %>%
-    filter(set_id == "Boardwalk")
+    filter(set_id == "CLMAJ-1")
 
 # dat <- dat_full
 

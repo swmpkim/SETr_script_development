@@ -5,6 +5,13 @@ library(tidyxl)
 library(unpivotr)
 library(janitor)
 
+##########################
+### This reserve has both deep and shallow 'type' associated with each set_id
+# DEAL WTIH THIS
+# or nothing will work
+##########################
+
+
 
 #############################
 # Deal with main data frame
