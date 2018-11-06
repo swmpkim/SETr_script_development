@@ -141,9 +141,11 @@ sum(dat_coded$code == 'other, not in key')
 
 # change names to be slightly more consistent
 # also get rid of any extra rows
+# append Deep/Shallow to the set_id
 dat_coded <- dat_coded %>%
-    mutate(reserve = 'DEL') %>%
-    select(reserve, set_id = site_label, date, arm_position = set_arm_position, pin_number = set_pin_no, pin_height = pin_measurement_mm, code, notes, latitude, longitude) %>%
+    mutate(reserve = 'DEL',
+           set_id = paste0(site_label, '_', type)) %>%
+    select(reserve, set_id, date, arm_position = set_arm_position, pin_number = set_pin_no, pin_height = pin_measurement_mm, code, notes, latitude, longitude) %>%
     filter(is.na(set_id) == FALSE)
 
 # spit out csv file

@@ -8,13 +8,13 @@ source(funs_path)
 
 # pick a reserve
 # (can we do this in shiny?)
-path <- here('data', 'intermediate', 'TEST.csv')
+path <- here('data', 'intermediate', 'DEL.csv')
 
 # read in data
 dat_full <- read_csv(path)
 
-dat <- dat_full %>%
-    filter(set_id == "CLMAJ-1")
+dat <- dat_full # %>%
+    # filter(set_id == "CLMAJ-1")
 
 # dat <- dat_full
 
@@ -27,7 +27,7 @@ dat %>%
     ggplot(aes(x = date, y = mean, col = arm_position)) +
     geom_point(size = 2.5) +
     geom_line(alpha = 0.6) +
-    facet_wrap(~set_id, ncol = 1, scales = 'free_y') +
+    facet_wrap(~set_id, ncol = 2, scales = 'free_y') +
     ggtitle('Pin Height (raw measurement)') +
     theme_bw()
 
@@ -68,7 +68,7 @@ change_cumu_arm %>%
 ggplot(change_cumu_arm, aes(x = date, y = mean_cumu, col = arm_position)) +
     geom_point(size = 2) +
     geom_line() +
-    facet_wrap(~set_id, ncol = 1, scales = 'free_y') +
+    facet_wrap(~set_id, ncol = 2, scales = 'free_y') +
     ggtitle('Cumulative Change') +
     theme_bw()
     
