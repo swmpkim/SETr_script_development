@@ -6,7 +6,7 @@ library(knitr)
 ################################################
 #### Specify the reserve
 ################################################
-reserve <- 'GND'
+reserve <- 'DEL'
 
 
 
@@ -141,13 +141,26 @@ ggplot(change_cumu_set, aes(x = date, y = mean_cumu)) +
 
 
 # 4 columns, which is better when there are a lot of SETs (ahem, PAD)
+###### different color options in this one - all in the steelblue family
+###### different stylings emphasize data points vs. regression line
+###### i think at this point it's the data points we want to emphasize, and the regression is there for extra info?
 ggplot(change_cumu_set, aes(x = date, y = mean_cumu)) +
-    geom_line(col = 'gray60') +
-    geom_point(col = 'cadetblue3', size = 2) +
-    geom_smooth(se = FALSE, method = 'lm', col = 'gray70', lty = 2) +
+    geom_line(col = 'lightsteelblue4') +
+    geom_smooth(se = FALSE, method = 'lm', col = 'steelblue4', lty = 5, size = 1) +
+    geom_point(shape = 21, fill = 'lightsteelblue1', col = 'steelblue3', size = 3.5, alpha = 0.9) +
     facet_wrap(~set_id, ncol = 4, scales = 'free_y') +
     labs(title = 'Cumulative Change since first reading', subtitle = 'dashed line is linear regression') +
     theme_classic()
+
+
+ggplot(change_cumu_set, aes(x = date, y = mean_cumu)) +
+    geom_line(col = 'gray55') +
+    geom_smooth(se = FALSE, method = 'lm', col = 'lightsteelblue4', lty = 2) +
+    geom_point(col = 'darkslategray4', size = 2.5, alpha = 0.9) +
+    facet_wrap(~set_id, ncol = 4, scales = 'free_y') +
+    labs(title = 'Cumulative Change since first reading', subtitle = 'dashed line is linear regression') +
+    theme_classic()
+
 
 # 3 columns, for those of us with sites of 3
 ggplot(change_cumu_set, aes(x = date, y = mean_cumu)) +
