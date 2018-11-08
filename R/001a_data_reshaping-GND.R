@@ -1,7 +1,11 @@
 # generally already in wide format because of how we've been working on it. 
 # adding flag columns for pins, and spitting out csv files for each SET id.
 
-library(tidyverse)
+# library(tidyverse)
+library(dplyr)
+library(readr)
+library(tidyr)
+library(ggplot2)
 library(lubridate)
 library(readxl)
 library(tidyxl)

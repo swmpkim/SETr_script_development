@@ -1,12 +1,18 @@
-library(tidyverse)
-library(lubridate)
+# library(tidyverse)
+# library(lubridate)
+# library(knitr)
+# trying to only load necessary packages
+library(dplyr)
+library(readr)
+library(tidyr)
+library(ggplot2)
 library(here)
-library(knitr)
+
 
 ################################################
 #### Specify the reserve
 ################################################
-reserve <- 'DEL'
+reserve <- 'PAD'
 
 
 
