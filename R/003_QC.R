@@ -1,12 +1,12 @@
-# library(tidyverse)
-# library(lubridate)
-# library(knitr)
 # trying to only load necessary packages
 library(dplyr)
 library(readr)
 library(tidyr)
 library(ggplot2)
 library(here)
+# library(tidyverse)
+# library(lubridate)
+# library(knitr)
 
 
 ################################################
@@ -37,19 +37,18 @@ if(exists('pin_height_mm', dat_full)){
         select(-pin_height_mm)
 }
 
-# wonky site at DEL
-# dat <- dat_full %>%
-#    filter(set_id %in% c("Delon_Deep","Delon_Shallow"))
 
+# filter to a single site or fewer if you want
 dat <- dat_full
 
 
-### generate some of the tables and graphs from the NPS spreadsheet
-####################################################################
+###### Calculations of Change
+#############
 # cumulative change
 calc_change_cumu(dat)
 # incremental change
 calc_change_incr(dat)
+
 
 
 
