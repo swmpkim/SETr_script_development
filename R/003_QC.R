@@ -12,7 +12,7 @@ library(here)
 ################################################
 #### Specify the reserve
 ################################################
-reserve <- 'PAD'
+reserve <- 'APA'
 
 
 
@@ -60,6 +60,16 @@ dat %>%
     geom_point(size = 2.5) +
     geom_line(alpha = 0.6) +
     facet_wrap(~set_id, ncol = 2, scales = 'free_y') +
+    ggtitle('Pin Height (raw measurement)') +
+    theme_bw()
+
+dat %>%
+    group_by(set_id, arm_position, date) %>%
+    summarize(mean = mean(pin_height, na.rm = TRUE)) %>%
+    ggplot(aes(x = date, y = mean, col = as.factor(arm_position))) +
+    geom_point(size = 2.5) +
+    geom_line(alpha = 0.6) +
+    facet_wrap(~set_id, ncol = 4, scales = 'free_y') +
     ggtitle('Pin Height (raw measurement)') +
     theme_bw()
 

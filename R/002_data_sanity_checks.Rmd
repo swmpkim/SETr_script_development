@@ -32,9 +32,10 @@ SOS <- paste0(path, '/SOS.csv')
 WAQ <- paste0(path, '/WAQ.csv')
 GND <- paste0(path, '/GND.csv')
 PAD <- paste0(path, '/PAD.csv')
+APA <- paste0(path, '/APA.csv')
 
 ##########################################
-file_to_read <- PAD
+file_to_read <- APA
 ##########################################
 
 dat <- read_csv(file_to_read)
@@ -69,6 +70,23 @@ kable(head(dat))
 ```{r}
 kable(tail(dat))
 ```
+
+
+```{r}
+# make sure pin heights are in mm so flagging works properly
+if(exists('pin_height_cm', dat)) {
+dat <- dat %>%
+    mutate(pin_height = pin_height_cm * 10) %>%
+    select(-pin_height_cm)
+}
+if(exists('pin_height_mm', dat)){
+    dat <- dat %>%
+        mutate(pin_height = pin_height_mm) %>%
+        select(-pin_height_mm)
+}
+
+```
+
 
 
 # Numeric Summaries  
