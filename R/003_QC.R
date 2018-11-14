@@ -12,7 +12,7 @@ library(here)
 ################################################
 #### Specify the reserve
 ################################################
-reserve <- 'APA'
+reserve <- 'DEL'
 
 
 
@@ -50,6 +50,14 @@ calc_change_cumu(dat)
 calc_change_incr(dat)
 
 
+# histogram of all pin readings
+ggplot(dat) +
+    geom_histogram(aes(pin_height, fill = as.factor(arm_position)), color = 'black') +
+    facet_wrap(~set_id, ncol = 4, scales = 'free_y') +
+    labs(title = 'Histogram of raw pin heights by SET', subtitle = 'colored by arm position; stacked') +
+    scale_fill_discrete(name = 'Arm Position') +
+    theme_bw() +
+    theme(legend.position = 'bottom')
 
 
 # graphs of raw pin readings (not cumulative change; just the raw readings)
@@ -61,7 +69,10 @@ dat %>%
     geom_line(alpha = 0.6) +
     facet_wrap(~set_id, ncol = 2, scales = 'free_y') +
     ggtitle('Pin Height (raw measurement)') +
-    theme_bw()
+    theme_bw() +
+    scale_color_discrete(name = 'Arm Position') +
+    theme(legend.position = 'bottom')
+    
 
 dat %>%
     group_by(set_id, arm_position, date) %>%
@@ -71,19 +82,23 @@ dat %>%
     geom_line(alpha = 0.6) +
     facet_wrap(~set_id, ncol = 4, scales = 'free_y') +
     ggtitle('Pin Height (raw measurement)') +
-    theme_bw()
+    theme_bw() +
+    scale_color_discrete(name = 'Arm Position') +
+    theme(legend.position = 'bottom')
 
 
 # not with free-y scales
 dat %>%
     group_by(set_id, arm_position, date) %>%
     summarize(mean = mean(pin_height, na.rm = TRUE)) %>%
-    ggplot(aes(x = date, y = mean, col = arm_position)) +
+    ggplot(aes(x = date, y = mean, col = as.factor(arm_position))) +
     geom_point(size = 2.5) +
     geom_line(alpha = 0.6) +
     facet_wrap(~set_id, ncol = 2) +
     ggtitle('Pin Height (raw measurement)') +
-    theme_bw()
+    theme_bw() +
+    scale_color_discrete(name = 'Arm Position') +
+    theme(legend.position = 'bottom')
 
 # 4 columns, which is better when there are a lot of SETs (ahem, PAD)
 dat %>%
@@ -94,7 +109,9 @@ dat %>%
     geom_line(alpha = 0.6) +
     facet_wrap(~set_id, ncol = 4, scales = 'free_y') +
     ggtitle('Pin Height (raw measurement)') +
-    theme_bw()
+    theme_bw() +
+    scale_color_discrete(name = 'Arm Position') +
+    theme(legend.position = 'bottom')
 
 # individual pins
 dat %>%
@@ -104,7 +121,9 @@ dat %>%
     geom_line(alpha = 0.6) +
     facet_wrap(arm_position~set_id, ncol = 2) +
     ggtitle('Pin Height (raw measurement)') +
-    theme_bw()
+    theme_bw() +
+    scale_color_discrete(name = 'Pin') +
+    theme(legend.position = 'bottom')
 
 
 
@@ -139,7 +158,9 @@ ggplot(change_cumu_arm, aes(x = date, y = mean_cumu, col = as.factor(arm_positio
     geom_line() +
     facet_wrap(~set_id, ncol = 2, scales = 'free_y') +
     ggtitle('Cumulative Change') +
-    theme_bw()
+    theme_bw() +
+    scale_color_discrete(name = 'Arm Position') +
+    theme(legend.position = 'bottom')
     
 # by SET
 change_cumu_set %>%
@@ -155,7 +176,7 @@ ggplot(change_cumu_set, aes(x = date, y = mean_cumu)) +
     theme_classic()
 
 
-# 4 columns, which is better when there are a lot of SETs (ahem, PAD)
+# 4 columns, which is better when there are a lot of SETs
 ###### different color options in this one - all in the steelblue family
 ###### different stylings emphasize data points vs. regression line
 ###### i think at this point it's the data points we want to emphasize, and the regression is there for extra info?
@@ -213,19 +234,23 @@ change_incr_arm %>%
     print()
 ggplot(change_incr_arm, aes(x = date, y = mean_incr, col = as.factor(arm_position))) +
     geom_point(size = 2) +
-    geom_hline(yintercept = 25, col = "red") +
-    geom_hline(yintercept = -25, col = "red") +
+    geom_hline(yintercept = 25, col = "red", size = 1) +
+    geom_hline(yintercept = -25, col = "red", size = 1) +
     facet_wrap(~set_id, ncol = 2, scales = 'free_y') +
     ggtitle('Incremental Change', subtitle = 'red lines at +/- 25 mm') +
-    theme_bw()
+    theme_bw() +
+    scale_color_discrete(name = 'Arm Position') +
+    theme(legend.position = 'bottom')
 # 4 columns
 ggplot(change_incr_arm, aes(x = date, y = mean_incr, col = as.factor(arm_position))) +
     geom_point(size = 2) +
-    geom_hline(yintercept = 25, col = "red") +
-    geom_hline(yintercept = -25, col = "red") +
+    geom_hline(yintercept = 25, col = "red", size = 1) +
+    geom_hline(yintercept = -25, col = "red", size = 1) +
     facet_wrap(~set_id, ncol = 4) +
     ggtitle('Incremental Change', subtitle = 'red lines at +/- 25 mm') +
-    theme_bw()
+    theme_bw() +
+    scale_color_discrete(name = 'Arm Position') +
+    theme(legend.position = 'bottom')
 
 # by SET
 change_incr_set %>%
