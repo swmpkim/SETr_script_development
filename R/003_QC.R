@@ -106,6 +106,24 @@ outname <- paste0(outpath, '/', reserve, '_', figtype, '.png')
 ggsave(outname, width = 6.2, height = 4.6, units = 'in', dpi = 400)
 
 
+####################################################################
+### Incremental change
+####################################################################
+
+plot_incr_arm(3)
+# for a single set, use plot_incr_arm(set = 'name of SET you want to graph')
+
+figtype <- 'incr_by_arm'
+outname <- paste0(outpath, '/', reserve, '_', figtype, '.png')
+ggsave(outname, width = 6.2, height = 4.6, units = 'in', dpi = 400)
+
+
+plot_incr_pin('SPALT-1', columns = 2)
+figtype <- 'incr_by_pin'
+outname <- paste0(outpath, '/', reserve, '_SPALT-1_', figtype, '.png')
+ggsave(outname, width = 6.2, height = 4.6, units = 'in', dpi = 400)
+
+
 
 ####################################################################
 ### View cumulative change, with dates along the top and groups as rows
@@ -130,7 +148,7 @@ change_cumu_set %>%
     print()
 
 ####################################################################
-### View incremental change (change since last reading), with dates along the top and groups as rows
+### Tables of Incremental Change
 ####################################################################
 
 # by pin
@@ -143,45 +161,6 @@ change_incr_arm %>%
     gather(key = summary_stat, value = value, mean_incr, sd_incr, se_incr) %>%
     spread(key = date, value = value) %>%
     print()
-## 2 columns
-ggplot(change_incr_arm, aes(x = date, y = mean_incr, col = as.factor(arm_position))) +
-    geom_point(size = 2) +
-    geom_hline(yintercept = 25, col = "red", size = 1) +
-    geom_hline(yintercept = -25, col = "red", size = 1) +
-    facet_wrap(~set_id, ncol = 2, scales = 'free_y') +
-    labs(title = 'Incremental Change', 
-         subtitle = 'red lines at +/- 25 mm',
-         x = 'Date',
-         y = 'Change since prior reading (mm)') +
-    theme_bw() +
-    scale_color_discrete(name = 'Arm Position') +
-    theme(legend.position = 'bottom')
-## 3 columns
-ggplot(change_incr_arm, aes(x = date, y = mean_incr, col = as.factor(arm_position))) +
-    geom_point(size = 2) +
-    geom_hline(yintercept = 25, col = "red", size = 1) +
-    geom_hline(yintercept = -25, col = "red", size = 1) +
-    facet_wrap(~set_id, ncol = 3, scales = 'free_y') +
-    labs(title = 'Incremental Change', 
-         subtitle = 'red lines at +/- 25 mm',
-         x = 'Date',
-         y = 'Change since prior reading (mm)') +
-    theme_bw() +
-    scale_color_discrete(name = 'Arm Position') +
-    theme(legend.position = 'bottom')
-# 4 columns
-ggplot(change_incr_arm, aes(x = date, y = mean_incr, col = as.factor(arm_position))) +
-    geom_point(size = 2) +
-    geom_hline(yintercept = 25, col = "red", size = 1) +
-    geom_hline(yintercept = -25, col = "red", size = 1) +
-    facet_wrap(~set_id, ncol = 4, scales = 'free_y') +
-    labs(title = 'Incremental Change', 
-         subtitle = 'red lines at +/- 25 mm',
-         x = 'Date',
-         y = 'Change since prior reading (mm)') +
-    theme_bw() +
-    scale_color_discrete(name = 'Arm Position') +
-    theme(legend.position = 'bottom')
 
 # by SET
 change_incr_set %>%
