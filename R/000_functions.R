@@ -88,3 +88,41 @@ calc_change_incr <- function(dat){
                   se_incr = sd(mean_value, na.rm = TRUE)/sqrt(length(!is.na(mean_value)))) %>%
         ungroup()
 }
+
+
+#######################################
+### Graphs
+#######################################
+
+# maybe figure out how to make free y scales an option in the function call
+
+## histogram, colored by arm
+hist_by_arm <- function(data, columns = 4){
+    ggplot(data) +
+        geom_histogram(aes(pin_height, fill = as.factor(arm_position)), color = 'black') +
+        facet_wrap(~set_id, ncol = columns, scales = 'free_y') +
+        labs(title = 'Histogram of raw pin heights by SET', 
+             subtitle = 'colored by arm position; stacked',
+             x = 'Pin Height (mm)') +
+        theme_bw() +
+        scale_fill_discrete(name = 'Arm Position') +
+        theme(legend.position = 'bottom')
+}
+
+
+## raw pin readings
+raw_by_arm <- function(data, columns = 4){
+    data %>%
+        group_by(set_id, arm_position, date) %>%
+        summarize(mean = mean(pin_height, na.rm = TRUE)) %>%
+        ggplot(aes(x = date, y = mean, col = as.factor(arm_position))) +
+        geom_point(size = 2.5) +
+        geom_line(alpha = 0.6) +
+        facet_wrap(~set_id, ncol = columns, scales = 'free_y') +
+        labs(title = 'Pin Height (raw measurement)',
+             x = 'Date',
+             y = 'Average pin height (mm)') +
+        theme_bw() +
+        scale_color_discrete(name = 'Arm Position') +
+        theme(legend.position = 'bottom')
+}

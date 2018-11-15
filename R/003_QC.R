@@ -12,8 +12,11 @@ library(here)
 ################################################
 #### Specify the reserve
 ################################################
-reserve <- 'DEL'
+reserve <- 'SOS'
 
+
+## specify output folder for graphs
+outpath <- here('qc_figs')
 
 
 # source functions script
@@ -23,6 +26,11 @@ source(funs_path)
 # read in data
 path <- here('data', 'intermediate', paste0(reserve, '.csv'))
 dat_full <- read_csv(path)
+
+outpath <- here('qc_figs')
+figtype <- 'hist'
+outname <- paste0(outpath, '/', reserve, '_', figtype, '.png')
+png(outname, width = 6.2, height = 4.6, units = 'in', res = 400)
 
 
 # make sure pin heights are in mm so flagging works properly
@@ -50,68 +58,23 @@ calc_change_cumu(dat)
 calc_change_incr(dat)
 
 
-# histogram of all pin readings
-ggplot(dat) +
-    geom_histogram(aes(pin_height, fill = as.factor(arm_position)), color = 'black') +
-    facet_wrap(~set_id, ncol = 4, scales = 'free_y') +
-    labs(title = 'Histogram of raw pin heights by SET', subtitle = 'colored by arm position; stacked') +
-    scale_fill_discrete(name = 'Arm Position') +
-    theme_bw() +
-    theme(legend.position = 'bottom')
+##### histogram of all pin readings
+hist_by_arm(dat)
+
+# save it
+figtype <- 'hist_by_arm'
+outname <- paste0(outpath, '/', reserve, '_', figtype, '.png')
+ggsave(outname, width = 6.2, height = 4.6, units = 'in', dpi = 400)
 
 
-# graphs of raw pin readings (not cumulative change; just the raw readings)
-dat %>%
-    group_by(set_id, arm_position, date) %>%
-    summarize(mean = mean(pin_height, na.rm = TRUE)) %>%
-    ggplot(aes(x = date, y = mean, col = as.factor(arm_position))) +
-    geom_point(size = 2.5) +
-    geom_line(alpha = 0.6) +
-    facet_wrap(~set_id, ncol = 2, scales = 'free_y') +
-    ggtitle('Pin Height (raw measurement)') +
-    theme_bw() +
-    scale_color_discrete(name = 'Arm Position') +
-    theme(legend.position = 'bottom')
-    
+##### graphs of raw pin readings (not cumulative change; just the raw readings)
+raw_by_arm(dat)
 
-dat %>%
-    group_by(set_id, arm_position, date) %>%
-    summarize(mean = mean(pin_height, na.rm = TRUE)) %>%
-    ggplot(aes(x = date, y = mean, col = as.factor(arm_position))) +
-    geom_point(size = 2.5) +
-    geom_line(alpha = 0.6) +
-    facet_wrap(~set_id, ncol = 4, scales = 'free_y') +
-    ggtitle('Pin Height (raw measurement)') +
-    theme_bw() +
-    scale_color_discrete(name = 'Arm Position') +
-    theme(legend.position = 'bottom')
+figtype <- 'raw_by_arm'
+outname <- paste0(outpath, '/', reserve, '_', figtype, '.png')
+ggsave(outname, width = 6.2, height = 4.6, units = 'in', dpi = 400)
 
 
-# not with free-y scales
-dat %>%
-    group_by(set_id, arm_position, date) %>%
-    summarize(mean = mean(pin_height, na.rm = TRUE)) %>%
-    ggplot(aes(x = date, y = mean, col = as.factor(arm_position))) +
-    geom_point(size = 2.5) +
-    geom_line(alpha = 0.6) +
-    facet_wrap(~set_id, ncol = 2) +
-    ggtitle('Pin Height (raw measurement)') +
-    theme_bw() +
-    scale_color_discrete(name = 'Arm Position') +
-    theme(legend.position = 'bottom')
-
-# 4 columns, which is better when there are a lot of SETs (ahem, PAD)
-dat %>%
-    group_by(set_id, arm_position, date) %>%
-    summarize(mean = mean(pin_height, na.rm = TRUE)) %>%
-    ggplot(aes(x = date, y = mean, col = as.factor(arm_position))) +
-    geom_point(size = 2.5) +
-    geom_line(alpha = 0.6) +
-    facet_wrap(~set_id, ncol = 4, scales = 'free_y') +
-    ggtitle('Pin Height (raw measurement)') +
-    theme_bw() +
-    scale_color_discrete(name = 'Arm Position') +
-    theme(legend.position = 'bottom')
 
 # individual pins
 dat %>%
@@ -153,11 +116,25 @@ change_cumu_arm %>%
     gather(key = summary_stat, value = value, mean_cumu, sd_cumu, se_cumu) %>%
     spread(key = date, value = value) %>%
     print()
+## 3 columns
 ggplot(change_cumu_arm, aes(x = date, y = mean_cumu, col = as.factor(arm_position))) +
     geom_point(size = 2) +
     geom_line() +
-    facet_wrap(~set_id, ncol = 2, scales = 'free_y') +
-    ggtitle('Cumulative Change') +
+    facet_wrap(~set_id, ncol = 3, scales = 'free_y') +
+    labs(title = 'Cumulative Change',
+         x = 'Date',
+         y = 'Change since first reading (mm)') +
+    theme_bw() +
+    scale_color_discrete(name = 'Arm Position') +
+    theme(legend.position = 'bottom')
+## 4 columns
+ggplot(change_cumu_arm, aes(x = date, y = mean_cumu, col = as.factor(arm_position))) +
+    geom_point(size = 2) +
+    geom_line() +
+    facet_wrap(~set_id, ncol = 4, scales = 'free_y') +
+    labs(title = 'Cumulative Change',
+         x = 'Date',
+         y = 'Change since first reading (mm)') +
     theme_bw() +
     scale_color_discrete(name = 'Arm Position') +
     theme(legend.position = 'bottom')
@@ -167,13 +144,46 @@ change_cumu_set %>%
     gather(key = summary_stat, value = value, mean_cumu, sd_cumu, se_cumu) %>%
     spread(key = date, value = value) %>%
     print()
+## 3 columns
 ggplot(change_cumu_set, aes(x = date, y = mean_cumu)) +
-    geom_line(col = 'gray60') +
-    geom_point(col = 'cadetblue3', size = 2) +
-    geom_smooth(se = FALSE, method = 'lm', col = 'gray70', lty = 2) +
-    facet_wrap(~set_id, ncol = 2, scales = 'free_y') +
-    labs(title = 'Cumulative Change since first reading', subtitle = 'dashed line is linear regression') +
+    geom_line(col = 'lightsteelblue4') +
+    geom_smooth(se = FALSE, method = 'lm', 
+                col = 'steelblue4', lty = 5, size = 1) +
+    geom_point(shape = 21, 
+               fill = 'lightsteelblue1', col = 'steelblue3', 
+               size = 3.5, alpha = 0.9) +
+    facet_wrap(~set_id, ncol = 3, scales = 'free_y') +
+    labs(title = 'Cumulative Change since first reading', 
+         subtitle = 'dashed line is linear regression',
+         x = 'Date',
+         y = 'Change since first reading (mm)') +
     theme_classic()
+## 4 columns
+ggplot(change_cumu_set, aes(x = date, y = mean_cumu)) +
+    geom_line(col = 'lightsteelblue4') +
+    geom_smooth(se = FALSE, method = 'lm', 
+                col = 'steelblue4', lty = 5, size = 1) +
+    geom_point(shape = 21, 
+               fill = 'lightsteelblue1', col = 'steelblue3', 
+               size = 3.5, alpha = 0.9) +
+    facet_wrap(~set_id, ncol = 4, scales = 'free_y') +
+    labs(title = 'Cumulative Change since first reading', 
+         subtitle = 'dashed line is linear regression',
+         x = 'Date',
+         y = 'Change since first reading (mm)') +
+    theme_classic()
+
+# ## 4 columns
+# ggplot(change_cumu_set, aes(x = date, y = mean_cumu)) +
+#     geom_line(col = 'gray60') +
+#     geom_point(col = 'cadetblue3', size = 2) +
+#     geom_smooth(se = FALSE, method = 'lm', col = 'gray70', lty = 2) +
+#     facet_wrap(~set_id, ncol = 4, scales = 'free_y') +
+#     labs(title = 'Cumulative Change since first reading', 
+#          subtitle = 'dashed line is linear regression',
+#          x = 'Date',
+#          y = 'Change since first reading (mm)') +
+#     theme_classic()
 
 
 # 4 columns, which is better when there are a lot of SETs
@@ -182,10 +192,16 @@ ggplot(change_cumu_set, aes(x = date, y = mean_cumu)) +
 ###### i think at this point it's the data points we want to emphasize, and the regression is there for extra info?
 ggplot(change_cumu_set, aes(x = date, y = mean_cumu)) +
     geom_line(col = 'lightsteelblue4') +
-    geom_smooth(se = FALSE, method = 'lm', col = 'steelblue4', lty = 5, size = 1) +
-    geom_point(shape = 21, fill = 'lightsteelblue1', col = 'steelblue3', size = 3.5, alpha = 0.9) +
+    geom_smooth(se = FALSE, method = 'lm', 
+                col = 'steelblue4', lty = 5, size = 1) +
+    geom_point(shape = 21, 
+               fill = 'lightsteelblue1', col = 'steelblue3', 
+               size = 3.5, alpha = 0.9) +
     facet_wrap(~set_id, ncol = 4, scales = 'free_y') +
-    labs(title = 'Cumulative Change since first reading', subtitle = 'dashed line is linear regression') +
+    labs(title = 'Cumulative Change since first reading', 
+         subtitle = 'dashed line is linear regression',
+         x = 'Date',
+         y = 'Change since first reading (mm)') +
     theme_classic()
 
 
@@ -232,12 +248,29 @@ change_incr_arm %>%
     gather(key = summary_stat, value = value, mean_incr, sd_incr, se_incr) %>%
     spread(key = date, value = value) %>%
     print()
+## 2 columns
 ggplot(change_incr_arm, aes(x = date, y = mean_incr, col = as.factor(arm_position))) +
     geom_point(size = 2) +
     geom_hline(yintercept = 25, col = "red", size = 1) +
     geom_hline(yintercept = -25, col = "red", size = 1) +
     facet_wrap(~set_id, ncol = 2, scales = 'free_y') +
-    ggtitle('Incremental Change', subtitle = 'red lines at +/- 25 mm') +
+    labs(title = 'Incremental Change', 
+         subtitle = 'red lines at +/- 25 mm',
+         x = 'Date',
+         y = 'Change since prior reading (mm)') +
+    theme_bw() +
+    scale_color_discrete(name = 'Arm Position') +
+    theme(legend.position = 'bottom')
+## 3 columns
+ggplot(change_incr_arm, aes(x = date, y = mean_incr, col = as.factor(arm_position))) +
+    geom_point(size = 2) +
+    geom_hline(yintercept = 25, col = "red", size = 1) +
+    geom_hline(yintercept = -25, col = "red", size = 1) +
+    facet_wrap(~set_id, ncol = 3, scales = 'free_y') +
+    labs(title = 'Incremental Change', 
+         subtitle = 'red lines at +/- 25 mm',
+         x = 'Date',
+         y = 'Change since prior reading (mm)') +
     theme_bw() +
     scale_color_discrete(name = 'Arm Position') +
     theme(legend.position = 'bottom')
@@ -246,8 +279,11 @@ ggplot(change_incr_arm, aes(x = date, y = mean_incr, col = as.factor(arm_positio
     geom_point(size = 2) +
     geom_hline(yintercept = 25, col = "red", size = 1) +
     geom_hline(yintercept = -25, col = "red", size = 1) +
-    facet_wrap(~set_id, ncol = 4) +
-    ggtitle('Incremental Change', subtitle = 'red lines at +/- 25 mm') +
+    facet_wrap(~set_id, ncol = 4, scales = 'free_y') +
+    labs(title = 'Incremental Change', 
+         subtitle = 'red lines at +/- 25 mm',
+         x = 'Date',
+         y = 'Change since prior reading (mm)') +
     theme_bw() +
     scale_color_discrete(name = 'Arm Position') +
     theme(legend.position = 'bottom')
