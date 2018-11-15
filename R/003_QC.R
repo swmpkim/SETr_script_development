@@ -12,13 +12,13 @@ library(here)
 ################################################
 #### Specify the reserve
 ################################################
-reserve <- 'GND'
+reserve <- 'DEL'
 
 
 ## specify output folder and default saving options for graphs
 outpath <- here('qc_figs')
 
-my.ggsave <- function(filename = outname, width = 9, height = 7, units = 'in', dpi = 500){
+my.ggsave <- function(filename = outname, width = 10, height = 9, units = 'in', dpi = 500){
     ggsave(filename = filename, width = width, height = height, units = units, dpi = dpi)
 }
 
@@ -63,7 +63,7 @@ calc_change_incr(dat)
 ##################################################
 
 ##### histogram of all pin readings
-hist_by_arm(dat, 3)
+hist_by_arm(dat)
 
 # save it
 figtype <- 'hist_by_arm'
@@ -74,7 +74,7 @@ my.ggsave()
 ##### graphs of raw pin readings (not cumulative change; just the raw readings)
 
 ## by arm
-plot_raw_arm(dat, 3)
+plot_raw_arm(dat)
 
 figtype <- 'raw_by_arm'
 outname <- paste0(outpath, '/', reserve, '_', figtype, '.png')
@@ -83,11 +83,11 @@ my.ggsave()
 
 
 ## by pin (pick a SET)
-plot_raw_pin(dat, set = 'SPALT-1')
-
-figtype <- 'raw_by_pin'
-outname <- paste0(outpath, '/', reserve, '_SPALT-1_', figtype, '.png')
-my.ggsave()
+# plot_raw_pin(dat, set = 'SPALT-1')
+# 
+# figtype <- 'raw_by_pin'
+# outname <- paste0(outpath, '/', reserve, '_SPALT-1_', figtype, '.png')
+# my.ggsave()
 
 
 ####################################################################
@@ -96,7 +96,7 @@ my.ggsave()
 
 
 # by arm
-plot_cumu_arm(3)
+plot_cumu_arm()
 
 figtype <- 'cumu_by_arm'
 outname <- paste0(outpath, '/', reserve, '_', figtype, '.png')
@@ -105,7 +105,7 @@ my.ggsave()
 
 
 # by SET
-plot_cumu_set(3)
+plot_cumu_set()
 
 figtype <- 'cumu_by_set'
 outname <- paste0(outpath, '/', reserve, '_', figtype, '.png')
@@ -116,7 +116,7 @@ my.ggsave()
 ### Incremental change
 ####################################################################
 
-plot_incr_arm(3)
+plot_incr_arm()
 # for a single set, use plot_incr_arm(set = 'name of SET you want to graph')
 
 figtype <- 'incr_by_arm'
@@ -124,10 +124,10 @@ outname <- paste0(outpath, '/', reserve, '_', figtype, '.png')
 my.ggsave()
 
 
-plot_incr_pin('SPALT-1', columns = 2)
-figtype <- 'incr_by_pin'
-outname <- paste0(outpath, '/', reserve, '_SPALT-1_', figtype, '.png')
-my.ggsave()
+# plot_incr_pin('SPALT-1', columns = 2)
+# figtype <- 'incr_by_pin'
+# outname <- paste0(outpath, '/', reserve, '_SPALT-1_', figtype, '.png')
+# my.ggsave()
 
 
 
