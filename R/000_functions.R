@@ -110,8 +110,10 @@ hist_by_arm <- function(data, columns = 4){
 }
 
 
-## raw pin readings
-raw_by_arm <- function(data, columns = 4){
+#### raw pin readings
+
+# by arm
+plot_raw_arm <- function(data, columns = 4){
     data %>%
         group_by(set_id, arm_position, date) %>%
         summarize(mean = mean(pin_height, na.rm = TRUE)) %>%
@@ -125,4 +127,58 @@ raw_by_arm <- function(data, columns = 4){
         theme_bw() +
         scale_color_discrete(name = 'Arm Position') +
         theme(legend.position = 'bottom')
+}
+
+
+# individual pins; choose a SET (put in quotes in function call)
+plot_raw_pin <- function(data, set, columns = 2){
+    data %>%
+        filter(set_id == !!set) %>%
+        group_by(set_id, arm_position, pin_number, date) %>%
+        ggplot(aes(x = date, y = pin_height, col = as.factor(pin_number))) +
+        geom_point(size = 2.5) +
+        geom_line(alpha = 0.6) +
+        facet_wrap(~arm_position, ncol = columns) +
+        labs(title = 'Pin Height (raw measurement)',
+             subtitle = sym(set),
+             x = 'Date',
+             y = 'Measured pin height (mm)') +
+        theme_bw() +
+        scale_color_discrete(name = 'Pin') +
+        theme(legend.position = 'bottom')
+}
+
+
+##### cumulative change
+
+## by arm
+plot_cumu_arm <- function(columns = 4) {
+    ggplot(change_cumu_arm, aes(x = date, y = mean_cumu, col = as.factor(arm_position))) +
+        geom_point(size = 2) +
+        geom_line() +
+        facet_wrap(~set_id, ncol = columns, scales = 'free_y') +
+        labs(title = 'Cumulative Change',
+             x = 'Date',
+             y = 'Change since first reading (mm)') +
+        theme_bw() +
+        scale_color_discrete(name = 'Arm Position') +
+        theme(legend.position = 'bottom')
+}
+
+
+## by set
+plot_cumu_set <- function(columns = 4){
+    ggplot(change_cumu_set, aes(x = date, y = mean_cumu)) +
+        geom_line(col = 'lightsteelblue4') +
+        geom_smooth(se = FALSE, method = 'lm', 
+                    col = 'steelblue4', lty = 5, size = 1) +
+        geom_point(shape = 21, 
+                   fill = 'lightsteelblue1', col = 'steelblue3', 
+                   size = 3.5, alpha = 0.9) +
+        facet_wrap(~set_id, ncol = columns, scales = 'free_y') +
+        labs(title = 'Cumulative Change since first reading', 
+             subtitle = 'dashed line is linear regression',
+             x = 'Date',
+             y = 'Change since first reading (mm)') +
+        theme_classic()
 }
