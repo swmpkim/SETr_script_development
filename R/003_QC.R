@@ -12,7 +12,7 @@ library(here)
 ################################################
 #### Specify the reserve
 ################################################
-reserve <- 'DEL'
+reserve <- 'GND'
 
 
 ## specify output folder and default saving options for graphs
@@ -27,6 +27,9 @@ my.ggsave <- function(filename = outname, width = 10, height = 9, units = 'in', 
 # source functions script
 funs_path <- here('R', '000_functions.R')
 source(funs_path)
+
+funs_path2 <- here('R', '000_functions_extra.R')
+source(funs_path2)
 
 # read in data
 path <- here('data', 'intermediate', paste0(reserve, '.csv'))
@@ -48,7 +51,8 @@ if(exists('pin_height_mm', dat_full)){
 
 
 # filter to a single site or fewer if you want
-dat <- dat_full
+dat <- dat_full %>%
+    filter(set_id == "SPALT-1")
 
 
 ###### Calculations of Change
@@ -119,7 +123,7 @@ my.ggsave()
 plot_incr_arm()
 # for a single set, use plot_incr_arm(set = 'name of SET you want to graph')
 
-figtype <- 'incr_by_arm'
+figtype <- 'incr_by_arm2'
 outname <- paste0(outpath, '/', reserve, '_', figtype, '.png')
 my.ggsave()
 
