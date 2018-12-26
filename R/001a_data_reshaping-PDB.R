@@ -11,7 +11,7 @@ library(here)
 # Figure out what's in the file
 #############################
 
-path <- here('data', 'raw_original', 'PAD.xlsx')
+path <- here::here('data', 'raw_original', 'PAD.xlsx')
 
 #########################
 # read_excel plus other strategies
@@ -46,7 +46,7 @@ for(i in seq_along(sheetnames)){
                pin_number = pin) %>%
         gather(key = date, value = pin_height, -arm_position, -pin_number) %>%
         mutate(date = excel_numeric_to_date(as.numeric(date)),
-               reserve = 'PAD',
+               reserve = 'PDB',
                set_id = sheetnames[i]) %>%
         select(reserve, set_id, date, arm_position, pin_number, pin_height) %>%
         arrange(set_id, date, arm_position, pin_number)
@@ -67,6 +67,6 @@ dat_all <- dat_all %>%
     select(-pin_height)
 
 # spit it back out
-path_out <- here('data', 'intermediate', 'PAD.csv')
+path_out <- here('data', 'intermediate', 'PDB.csv')
 write_csv(dat_all, path_out)
 

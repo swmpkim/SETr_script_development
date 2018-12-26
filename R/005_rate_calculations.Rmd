@@ -18,6 +18,7 @@ The following R packages are required to generate this report:
 library(readr)
 library(dplyr)
 library(tidyr)
+library(ggplot2)
 library(broom)
 library(here)
 ```
@@ -42,13 +43,18 @@ if(exists('pin_height_mm', dat)){
         mutate(pin_height = pin_height_mm) %>%
         select(-pin_height_mm)
 }
+
+# get rid of any placeholders; make sure date is proper format  
+dat <- dat %>%
+    filter(!is.na(date)) %>%
+    mutate(date = as.Date(date))
 ```
 
 Other reserve-specific inputs here (e.g., NAVD-88 heights of SET receivers; local rate of SLR; etc)  
 
 ```{r}
 # local rate of sea level rise, in mm/yr
-slr <- 3.5
+slr <- 3.61
 ```
 
 
@@ -200,6 +206,24 @@ rates_elev_set %>%
                  align = 'c')
 ```
 
+***  
+
+# Graph  
+
+for a sanity check of the above rates  
+
+Linear regression is NOT appropriate for all sites; interpret this with caution
+
+```{r, fig.width = 7, fig.height = 10}
+ggplot(dat, aes(x = date, y = pin_height)) +
+    geom_point(aes(col = arm_position), alpha = 0.6) +
+    facet_wrap(~set_id, ncol = 4, scales = "free_y") +
+    geom_smooth(method = 'lm', se = FALSE, size = 2, col = "black") +
+    labs(title = "Pin readings by date", subtitle = "with linear regression through all pins", x = "Date", y = "Pin Height (mm)") +
+    scale_fill_discrete(name = 'Arm Position') +
+    theme_bw() +
+    theme(legend.position = 'bottom')
+```
 
 
 ```{r}

@@ -11,7 +11,7 @@ library(here)
 # Deal with main data frame
 #############################
 
-path <- here('data', 'raw_original', 'WAQ.xlsx')
+path <- here::here('data', 'raw_original', 'WAQ.xlsx')
 
 
 ##### tasks #######
@@ -141,12 +141,12 @@ dat$dat2018 <- dat$dat2018 %>%
 # this does NOT deal with column class differences
 dat_all <- reshape::merge_recurse(dat) %>%
     mutate(sum_na = is.na(set_id) + is.na(date) + is.na(pin_height),
-           reserve = 'WAQ',
+           reserve = 'WQB',
            date = ymd(date)) %>%
     rename(pin_height_cm = pin_height) %>%
     filter(sum_na <3) %>%
     select(reserve, everything(), -sum_na)
 
-write_csv(dat_all, here('data', 'intermediate', 'WAQ.csv'))
+write_csv(dat_all, here('data', 'intermediate', 'WQB.csv'))
 
 ###
