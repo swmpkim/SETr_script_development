@@ -30,7 +30,7 @@ This reads in the long dataset, converted from other formats by earlier scripts.
 
 ```{r read_data}
 path <- here::here('data/intermediate')
-dat <- read_csv(paste0(path, '/GND.csv'))
+dat <- read_csv(paste0(path, '/SOS.csv'))
 
 # make sure pin heights are in mm
 if(exists('pin_height_cm', dat)) {
@@ -46,7 +46,8 @@ if(exists('pin_height_mm', dat)){
 
 # get rid of any placeholders; make sure date is proper format  
 dat <- dat %>%
-    filter(!is.na(date)) %>%
+    filter(!is.na(date),
+           !is.na(pin_number)) %>%
     mutate(date = as.Date(date))
 ```
 
@@ -54,7 +55,7 @@ Other reserve-specific inputs here (e.g., NAVD-88 heights of SET receivers; loca
 
 ```{r}
 # local rate of sea level rise, in mm/yr
-slr <- 3.61
+slr <- 1.12
 ```
 
 
