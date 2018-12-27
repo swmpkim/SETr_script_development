@@ -9,7 +9,7 @@ library(tidyr)
 library(ggplot2)
 library(here)
 library(shiny)
-library(ggiraph)
+library(plotly)
 
 
 
@@ -72,8 +72,8 @@ ui <- fluidPage(
         
         
         mainPanel(
-            plotOutput(outputId = "scatterplot"),
-            ggiraphOutput(outputId = "ggiraphscatter")
+            # plotOutput(outputId = "scatterplot"),
+            plotlyOutput(outputId = "plotlyscatter")
         )
         
     )
@@ -84,30 +84,32 @@ ui <- fluidPage(
 # Define server function
 server <- function(input, output) {
     
-    # Subset data
-    # dat_subset <- reactive({
-    #     req(input$date)
-    #     validate(need(!is.na(input$date[1]) & !is.na(input$date[2]), "Error: Please provide both a start and an end date."))
-    #     validate(need(input$date[1] < input$date[2], "Error: Start date should be earlier than end date."))
-    #     dat %>%
-    #         filter(
-    #             set_id == input$SET,
-    #             date >= as.POSIXct(input$date[1]) & date <= as.POSIXct(input$date[2]
-    #             ))
-    # })
+    
+    # subset data, reactively
+    dat2 <- reactive({
+        req(input$SET)
+        req(input$date)
+        dat %>%
+            filter(set_id == input$SET,
+                   date >= as.Date(input$date[1]),
+                   date <= as.Date(input$date[2]))
+    })
     
     
     # Create scatterplot object the plotOutput function is expecting
-    output$scatterplot <- renderPlot({
-        ggplot(dat) +
-            geom_point(aes(x = date, y = pin_height))
-        })
+    # output$scatterplot <- renderPlot({
+    #     ggplot(dat2()) +
+    #         geom_point(aes(x = date, y = pin_height))
+    #     })
     
-    # output$ggiraphscatter <- renderggiraph({
-    #     g <- ggplot(dat) +
-    #         geom_point_interactive(aes(x = date, y = pin_height))
-    #     ggiraph(code = print(g))
-    # })
+    # create plotly object
+    output$plotlyscatter <- renderPlotly({
+        ggplot(dat2()) +
+            geom_point(aes(x = date, y = pin_height, col = arm_position)) +
+            labs(title = paste("Raw pin measurements at", input$SET), x = "Date", y = "pin height (mm)") +
+            theme_bw() +
+            theme(legend.position = 'bottom')
+    })
 
 }
 

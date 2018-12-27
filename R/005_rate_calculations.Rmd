@@ -278,4 +278,21 @@ ggplot() +
 ```
 
 
+# Let's look at Variability  
+
+Here's a histogram of rates at each SET: blue is each pin (n = 36 per SET), gray is each arm position (n = 4 per SET), vertical line is overall average per SET (calculated as average of arms, where arms were the average of 9 pins)
+
+```{r}
+ggplot() + 
+    geom_histogram(data = rates_elev_pins, aes(rate_mm.yr, stat(density)), fill = "navy", binwidth = 0.5)  +
+    geom_histogram(data = rates_elev_arms, aes(rate_mm.yr_arm, stat(density)), fill = "gray50", alpha = 0.5) +
+    geom_vline(data = rates_elev_set, aes(xintercept = rate_mm.yr_set), size = 1, col = "red3") +
+    facet_wrap(~set_id) +
+    theme_bw() +
+    labs(title = "Calculated Rates per SET", x = "Rate (mm/yr)", y = "density")
+
+
+
+```
+
 
