@@ -62,8 +62,14 @@ ui <- fluidPage(
             ),
             
             # select whether to overlay a trend line
-            checkboxInput(inputId = "smoother", 
-                          label = strong("Overlay smooth trend line"),
+            checkboxInput(inputId = "lmsmooth", 
+                          label = strong("Overlay linear regression"),
+                          value = FALSE
+            ),
+            
+            # select whether to overlay a loess line
+            checkboxInput(inputId = "loesssmooth", 
+                          label = strong("Overlay loess smooth"),
                           value = FALSE
             )
             
@@ -72,7 +78,6 @@ ui <- fluidPage(
         
         
         mainPanel(
-            # plotOutput(outputId = "scatterplot"),
             plotlyOutput(outputId = "plotlyscatter")
         )
         
@@ -94,23 +99,28 @@ server <- function(input, output) {
                    date >= as.Date(input$date[1]),
                    date <= as.Date(input$date[2]))
     })
-    
-    
-    # Create scatterplot object the plotOutput function is expecting
-    # output$scatterplot <- renderPlot({
-    #     ggplot(dat2()) +
-    #         geom_point(aes(x = date, y = pin_height))
-    #     })
+
     
     # create plotly object
     output$plotlyscatter <- renderPlotly({
-        ggplot(dat2()) +
+        
+        # create the base plot
+        p <- ggplot(dat2()) +
             geom_point(aes(x = date, y = pin_height, col = arm_position)) +
             labs(title = paste("Raw pin measurements at", input$SET), x = "Date", y = "pin height (mm)") +
             theme_bw() +
             theme(legend.position = 'bottom')
+        
+        # add smoothing layers if checked
+        if (input$lmsmooth == TRUE) p <- p + geom_smooth(aes(x = date, y = pin_height), method = "lm", se = FALSE)
+        
+        if (input$loesssmooth == TRUE) p <- p + geom_smooth(aes(x = date, y = pin_height), method = "loess", se = FALSE)
+        
+        # return the plot
+        p
+        
     })
-
+    
 }
 
 # Create Shiny object
