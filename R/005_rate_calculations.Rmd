@@ -30,7 +30,7 @@ This reads in the long dataset, converted from other formats by earlier scripts.
 
 ```{r read_data}
 path <- here::here('data/intermediate')
-dat <- read_csv(paste0(path, '/SOS.csv'))
+dat <- read_csv(paste0(path, '/GND.csv'))
 
 # make sure pin heights are in mm
 if(exists('pin_height_cm', dat)) {
@@ -55,7 +55,8 @@ Other reserve-specific inputs here (e.g., NAVD-88 heights of SET receivers; loca
 
 ```{r}
 # local rate of sea level rise, in mm/yr
-slr <- 1.12
+slr <- 3.61
+slr_ci <- 0.59
 ```
 
 
@@ -152,7 +153,7 @@ knitr::kable(rates_elev_set,
 
 # Sea Level Rise Comparisons  
 
-The local rate of sea level rise was input as **`r slr` mm/yr** .
+The local rate of sea level rise was input as **`r slr` +/- `r slr_ci` mm/yr** .
 
 The following tables break the SETs into groups where the rate of SET elevation change is *lower than* / *higher than* / *not different from* this SLR rate.  
 
@@ -215,7 +216,7 @@ for a sanity check of the above rates
 
 Linear regression is NOT appropriate for all sites; interpret this with caution
 
-```{r, fig.width = 7, fig.height = 10}
+```{r, fig.width = 7, fig.height = 9}
 ggplot(dat, aes(x = date, y = pin_height)) +
     geom_point(aes(col = arm_position), alpha = 0.6) +
     facet_wrap(~set_id, ncol = 4, scales = "free_y") +
@@ -224,6 +225,22 @@ ggplot(dat, aes(x = date, y = pin_height)) +
     scale_fill_discrete(name = 'Arm Position') +
     theme_bw() +
     theme(legend.position = 'bottom')
+```
+
+# Another graph  
+
+To visualize confidence intervals; because calculated SLR rate also has a standard error  
+
+```{r, fig.width = 7, fig.height = 6}
+ggplot() +
+    geom_blank(data = rates_elev_set, aes(x = set_id, y = rate_mm.yr_set)) +
+    geom_ribbon(aes(x = 0:(nrow(rates_elev_set)+1), ymin = slr-slr_ci, ymax = slr+slr_ci), fill = "navyblue", alpha = 0.1) +
+    geom_hline(aes(yintercept = slr), col = "navyblue", size = 1) +
+    geom_errorbar(data = rates_elev_set, aes(x = set_id, ymin = CI95_low, ymax = CI95_high), col = "gray55", size = 1) +
+    geom_point(data = rates_elev_set, aes(x = set_id, y = rate_mm.yr_set), size = 3, col = "tomato3") +
+    theme_classic() + 
+    labs(title = "Elevation Change, 95% Confidence Intervals", subtitle = paste0("Local SLR in blue: ", slr, " +/- ", slr_ci, " mm/yr"), x = "SET", y = "Rate of change (mm/yr)") +
+    coord_flip()
 ```
 
 
