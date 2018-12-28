@@ -1,3 +1,24 @@
+########################################
+# turn any pin heights into mm
+# and name the column pin_height
+########################################
+height_to_mm <- function(data){
+    if(exists('pin_height_cm', data)) {
+        data <- data %>%
+            mutate(pin_height = pin_height_cm * 10) %>%
+            select(-pin_height_cm)
+    }
+    if(exists('pin_height_mm', data)){
+        data <- data %>%
+            mutate(pin_height = pin_height_mm) %>%
+            select(-pin_height_mm)
+    }
+    return(data)
+}
+
+
+
+
 ######################################################
 ######################################################
 #### Cumulative change (change since first reading)

@@ -33,6 +33,8 @@ library(tidyr)
 library(ggplot2)
 library(broom)
 library(here)
+funs_path <- here::here('R', '000_functions.R')
+source(funs_path)
 ```
 
 
@@ -45,16 +47,7 @@ path <- here::here('data/intermediate')
 dat <- read_csv(paste0(path, '/WQB.csv'))
 
 # make sure pin heights are in mm
-if(exists('pin_height_cm', dat)) {
-dat <- dat %>%
-    mutate(pin_height = pin_height_cm * 10) %>%
-    select(-pin_height_cm)
-}
-if(exists('pin_height_mm', dat)){
-    dat <- dat %>%
-        mutate(pin_height = pin_height_mm) %>%
-        select(-pin_height_mm)
-}
+dat <- height_to_mm(dat)
 
 # get rid of any placeholders; make sure date is proper format  
 dat <- dat %>%
