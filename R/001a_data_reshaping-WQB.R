@@ -144,7 +144,9 @@ dat_all <- reshape::merge_recurse(dat) %>%
            reserve = 'WQB',
            date = ymd(date)) %>%
     rename(pin_height_cm = pin_height) %>%
-    filter(sum_na <3) %>%
+    filter(sum_na <3,
+           !is.na(date),
+           !is.na(pin_number)) %>%
     select(reserve, everything(), -sum_na)
 
 write_csv(dat_all, here('data', 'intermediate', 'WQB.csv'))
