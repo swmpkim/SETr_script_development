@@ -38,21 +38,12 @@ dat_full <- read_csv(path)
 
 
 # make sure pin heights are in mm so flagging works properly
-if(exists('pin_height_cm', dat_full)) {
-dat_full <- dat_full %>%
-    mutate(pin_height = pin_height_cm * 10) %>%
-    select(-pin_height_cm)
-}
-if(exists('pin_height_mm', dat_full)){
-    dat_full <- dat_full %>%
-        mutate(pin_height = pin_height_mm) %>%
-        select(-pin_height_mm)
-}
+dat_full <- height_to_mm(dat_full)
+
 
 
 # filter to a single site or fewer if you want
-dat <- dat_full %>%
-    filter(set_id == "SPALT-1")
+dat <- dat_full 
 
 
 ###### Calculations of Change

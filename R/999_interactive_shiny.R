@@ -68,7 +68,10 @@ ui <- fluidPage(
         
         
         mainPanel(
-            plotlyOutput(outputId = "plotlyscatter")
+            plotlyOutput(outputId = "plotlyscatter"),
+            plotlyOutput(outputId = "plotly_raw_arm"),
+            plotlyOutput(outputId = "plotly_raw_pin"),
+            plotlyOutput(outputId = "plotly_incr_pin")
         )
         
     )
@@ -96,9 +99,10 @@ server <- function(input, output) {
         
         # create the base plot
         p <- ggplot(dat2()) +
-            geom_point(aes(x = date, y = pin_height, col = arm_position)) +
+            geom_point(aes(x = date, y = pin_height, col = as.factor(arm_position))) +
             labs(title = paste("Raw pin measurements at", input$SET), x = "Date", y = "pin height (mm)") +
             theme_bw() +
+            scale_color_discrete(name = 'Arm Position') +
             theme(legend.position = 'bottom')
         
         # add smoothing layers if checked
@@ -109,6 +113,26 @@ server <- function(input, output) {
         # return the plot
         p
         
+    })
+    
+    
+    # create plotly plot of avg raw reading by arm
+    output$plotly_raw_arm <- renderPlotly({
+        q <- plot_raw_arm(dat2())
+        q
+    }) 
+    
+    # create plotly plot of raw readings by pin
+    output$plotly_raw_pin <- renderPlotly({
+        z <- plot_raw_pin(dat2(), set = input$SET)
+        z
+    })
+    
+    
+    # create plotly plot of incremental change by pin
+    output$plotly_incr_pin <- renderPlotly({
+        a <- plot_incr_pin2(input$SET)
+        a
     })
     
 }
