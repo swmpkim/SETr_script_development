@@ -47,8 +47,7 @@ ui <- fluidPage(
             
             # select date range to plot
             dateRangeInput("date", strong("Date range"), 
-                           start = min(dat$date), end = max(dat$date),
-                           min = min(dat$date), max = max(dat$date)
+                           start = min(dat$date), end = max(dat$date)
             ),
             
             # select whether to overlay a trend line
@@ -61,7 +60,20 @@ ui <- fluidPage(
             checkboxInput(inputId = "loesssmooth", 
                           label = strong("Overlay loess smooth"),
                           value = FALSE
+            ),
+            
+            # select the span for loess
+            # only if loess box is true
+            conditionalPanel(
+                condition = "input.loesssmooth == true",
+                sliderInput(inputId = "loess_span",
+                        label = "loess span",
+                        min = 0.1,
+                        max = 1.5,
+                        value = 0.5,
+                        step = 0.1)
             )
+            
             
             
         ),
@@ -97,6 +109,9 @@ server <- function(input, output) {
     # create plotly object
     output$plotlyscatter <- renderPlotly({
         
+        req(input$SET)
+        req(input$date)
+        
         # create the base plot
         p <- ggplot(dat2()) +
             geom_point(aes(x = date, y = pin_height, col = as.factor(arm_position))) +
@@ -105,10 +120,11 @@ server <- function(input, output) {
             scale_color_discrete(name = 'Arm Position') +
             theme(legend.position = 'bottom')
         
+        
         # add smoothing layers if checked
         if (input$lmsmooth == TRUE) p <- p + geom_smooth(aes(x = date, y = pin_height), method = "lm", se = FALSE)
         
-        if (input$loesssmooth == TRUE) p <- p + geom_smooth(aes(x = date, y = pin_height), method = "loess", se = FALSE)
+        if (input$loesssmooth == TRUE) p <- p + geom_smooth(aes(x = date, y = pin_height), method = "loess", se = FALSE, span = input$loess_span)
         
         # return the plot
         p
@@ -118,12 +134,16 @@ server <- function(input, output) {
     
     # create plotly plot of avg raw reading by arm
     output$plotly_raw_arm <- renderPlotly({
+        req(input$SET)
+        req(input$date)
         q <- plot_raw_arm(dat2())
         q
     }) 
     
     # create plotly plot of raw readings by pin
     output$plotly_raw_pin <- renderPlotly({
+        req(input$SET)
+        req(input$date)
         z <- plot_raw_pin(dat2(), set = input$SET)
         z
     })
@@ -131,6 +151,8 @@ server <- function(input, output) {
     
     # create plotly plot of incremental change by pin
     output$plotly_incr_pin <- renderPlotly({
+        req(input$SET)
+        req(input$date)
         a <- plot_incr_pin2(input$SET)
         a
     })
