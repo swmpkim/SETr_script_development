@@ -3,7 +3,10 @@
 *.RData
 *.Ruserdata
 data/
+qc_figs/
+output/
 *.html
+*.docx
 .Rproj.user/
 .Rproj.user
 .Rhistory
