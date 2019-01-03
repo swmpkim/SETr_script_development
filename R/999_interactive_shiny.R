@@ -81,8 +81,11 @@ ui <- fluidPage(
         
         mainPanel(
             plotlyOutput(outputId = "plotlyscatter"),
+            br(), br(),
             plotlyOutput(outputId = "plotly_raw_arm"),
+            br(), br(),
             plotlyOutput(outputId = "plotly_raw_pin"),
+            br(), br(),
             plotlyOutput(outputId = "plotly_incr_pin")
         )
         
