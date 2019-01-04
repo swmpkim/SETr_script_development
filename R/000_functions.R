@@ -134,12 +134,12 @@ hist_by_arm <- function(data, columns = 4){
 #### raw pin readings
 
 # by arm
-plot_raw_arm <- function(data, columns = 4){
+plot_raw_arm <- function(data, columns = 4, pointsize = 2){
     data %>%
         group_by(set_id, arm_position, date) %>%
         summarize(mean = mean(pin_height, na.rm = TRUE)) %>%
         ggplot(aes(x = date, y = mean, col = as.factor(arm_position))) +
-        geom_point(size = 2.5) +
+        geom_point(size = pointsize) +
         geom_line(alpha = 0.6) +
         facet_wrap(~set_id, ncol = columns, scales = 'free_y') +
         labs(title = 'Pin Height (raw measurement)',
@@ -152,12 +152,12 @@ plot_raw_arm <- function(data, columns = 4){
 
 
 # individual pins; choose a SET (put in quotes in function call)
-plot_raw_pin <- function(data, set, columns = 2){
+plot_raw_pin <- function(data, set, columns = 2, pointsize = 2){
     data %>%
         filter(set_id == !!set) %>%
         group_by(set_id, arm_position, pin_number, date) %>%
         ggplot(aes(x = date, y = pin_height, col = as.factor(pin_number))) +
-        geom_point(size = 2.5) +
+        geom_point(size = pointsize) +
         geom_line(alpha = 0.6) +
         facet_wrap(~arm_position, ncol = columns) +
         labs(title = 'Pin Height (raw measurement)',

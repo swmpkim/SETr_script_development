@@ -49,6 +49,13 @@ ui <- fluidPage(
             dateRangeInput("date", strong("Date range"), 
                            start = min(dat$date), end = max(dat$date)
             ),
+
+            # select size of points for plots
+            sliderInput(inputId = "ptsize", label = "point size",
+                        min = 0.5,
+                        max = 4,
+                        value = 2,
+                        step = 0.5),
             
             # select whether to overlay a trend line
             checkboxInput(inputId = "lmsmooth", 
@@ -139,7 +146,7 @@ server <- function(input, output) {
     output$plotly_raw_arm <- renderPlotly({
         req(input$SET)
         req(input$date)
-        q <- plot_raw_arm(dat2())
+        q <- plot_raw_arm(dat2(), pointsize = input$ptsize)
         q
     }) 
     
@@ -147,7 +154,7 @@ server <- function(input, output) {
     output$plotly_raw_pin <- renderPlotly({
         req(input$SET)
         req(input$date)
-        z <- plot_raw_pin(dat2(), set = input$SET)
+        z <- plot_raw_pin(dat2(), set = input$SET, pointsize = input$ptsize)
         z
     })
     
@@ -156,7 +163,7 @@ server <- function(input, output) {
     output$plotly_incr_pin <- renderPlotly({
         req(input$SET)
         req(input$date)
-        a <- plot_incr_pin2(input$SET)
+        a <- plot_incr_pin2(input$SET, pointsize = input$ptsize)
         a
     })
     
