@@ -19,14 +19,19 @@ library(ggplot2)
 library(here)
 library(XLConnect)
 
-# read in data
-path <- here::here('data/intermediate')
-dat <- read_csv(paste0(path, '/', reserve, '.csv'))
-
 # generate name for output file
 xlname <-  paste0(tolower(reserve),'set.xlsx')
 xlpath <- here('data', 'intermediate', 'excel', xlname)
 
+
+# read in data
+path <- here::here('data/intermediate')
+dat <- read_csv(paste0(path, '/', reserve, '.csv'))
+
+
+# if pin number is just a number, make it a string
+if (class(dat$pin_number) == "numeric")
+    dat$pin_number <- paste0("pin_", dat$pin_number)
 
 
 # reshape the dataset, back to wide format
