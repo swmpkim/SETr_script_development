@@ -7,6 +7,6 @@ qc_figs/
 output/
 *.html
 *.docx
-.Rproj.user/
-.Rproj.user
+*.png
+.Rproj/
 .Rhistory
