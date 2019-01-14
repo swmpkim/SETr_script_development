@@ -1,30 +1,28 @@
-# It's possible to write a shorter command to install all these packages
-# But there's always at least one that causes trouble
-# So I like to install one at a time - easier to find the troublemakers
-# Run one line at a time below, and when you get the 'success' message,
+# Run one chunk at a time below, and when you get the 'success' message,
 # move on to the next line
+# sucess looks something like this:
+# package ‘here’ successfully unpacked and MD5 sums checked
 
-install.packages("dplyr")
+# if you have any errors, try that chunk again later. 
+# If it still doesn't work, copy and paste the whole chunk (including the code you ran) into an email and send it to Kim
 
-install.packages("tidyr")
 
-install.packages("ggplot2")
 
-install.packages("readr")
+install.packages(c("broom", "ggplot2", "here", "janitor"), 
+                 dependencies = TRUE, 
+                 quiet = TRUE)
 
-install.packages("here")
 
-install.packages("lubridate")
+install.packages(c("knitr", "lubridate", "nlme", "plotly"), 
+                 dependencies = TRUE, 
+                 quiet = TRUE)
 
-install.packages("rmarkdown")
 
-install.packages("shiny")
+install.packages(c("readr", "readxl", "rmarkdown", "shiny"), 
+                 dependencies = TRUE, 
+                 quiet = TRUE)
 
-install.packages("broom")
 
-install.packages("plotly")
-
-install.packages("")
-install.packages("")
-install.packages("")
-
+install.packages(c("dplyr", "tidyr"), 
+                 dependencies = TRUE, 
+                 quiet = TRUE)
