@@ -16,6 +16,7 @@ library(dplyr)
 library(readr)
 library(tidyr)
 library(ggplot2)
+library(stringr)
 library(here)
 library(XLConnect)
 
@@ -37,15 +38,37 @@ if (class(dat$pin_number) == "numeric")
 # reshape the dataset, back to wide format
 # first look for either pin_height_mm or pin_height_cm to use as the key
 pin_col_name <- grep("pin_height", names(dat), value = TRUE)
+# hold onto those units
+pin_units <- str_extract(pin_col_name, "[^_]*$")
 # now group, spread, and arrange
 # also turn date into a character string because otherwise it saves crazily
 dat_wide <- dat %>%
+    mutate(pin_number = paste0(pin_number, "_", pin_units)) %>%
     group_by(reserve, set_id, arm_position, date) %>%
     spread(key = pin_number, value = !!pin_col_name) %>%
     arrange(reserve, set_id, date, arm_position) %>%
     ungroup() %>%
     mutate(date = as.character(date))
 
+# make new column names for flags, based on pins that exist in the data
+pin_ids <- grep("pin_", names(dat_wide), value = TRUE) %>%
+    str_extract("pin_[:digit:]")
+flag_ids <- paste0(pin_ids, "_flag")
+
+# loop through each flag id and create the column in the data frame
+for(i in 1:length(flag_ids)){
+    # how many columns do we already have?
+    col_num <- length(names(dat_wide))
+    # generate a column of 0s at the end
+    dat_wide[[1 + col_num]] <- as.numeric(0)
+    # name the column
+    names(dat_wide)[1 + col_num] <- flag_ids[i]
+}
+
+
+#############################################
+#############################################
+#############################################
 
 # create the workbook
 wb <- loadWorkbook(xlpath, create = TRUE)
