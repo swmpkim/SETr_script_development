@@ -18,7 +18,9 @@ install.packages("knitr", quiet = TRUE)
 
 install.packages("lubridate", quiet = TRUE)
 
-install.packages("nlme", quiet = TRUE)
+install.packages("nlme", quiet = TRUE)  
+
+install.packages("lme4", quiet = TRUE)
 
 install.packages("plotly", quiet = TRUE)
 
@@ -37,4 +39,8 @@ install.packages("tidyr", quiet = TRUE)
 install.packages("ggplot2", quiet = TRUE)
 
 install.packages("broom", quiet = TRUE)
+
+install.packages("stringr", quiet = TRUE)
+
+install.packages("reshape", quiet = TRUE)
 
