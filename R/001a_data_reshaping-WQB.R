@@ -11,7 +11,7 @@ library(here)
 # Deal with main data frame
 #############################
 
-path <- here::here('data', 'raw_original', 'WAQ.xlsx')
+path <- here::here('data', 'raw_original', 'WQB.xlsx')
 
 
 ##### tasks #######
@@ -67,7 +67,7 @@ dat$dat2013$date <- gsub("1020", NA, dat$dat2013$date)  # replace that comment a
 dat$dat2013 <- dat$dat2013 %>%
     mutate(date = excel_numeric_to_date(as.numeric(dat$dat2013$date)),
            pin_height = as.numeric(x2013_measured_pin_height_cm),
-           notes = x_2) %>%
+           notes = x15) %>%
     select(set_id = set_code, date, arm_position = position, pin_number, pin_height, front_back = f_b, notes)
 
 
@@ -81,7 +81,7 @@ dat$dat2014 <- dat$dat2014 %>%
     mutate(date = as.Date(date),
            pin_height = as.numeric(x2014_measured_pin_height_cm),
            front_back = f_b,
-           notes = x_2) %>%
+           notes = x16) %>%
     select(set_id = set_code, date, arm_position = position, pin_number, pin_height, front_back = f_b, notes)
 
 

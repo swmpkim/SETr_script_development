@@ -97,12 +97,12 @@ unique_sets <- unique(dat_wide$set_id)
 
 # create styles for the worksheets
 # create the style for highlighted rows
-highlighted2 <- createCellStyle(wb, 'highlighted2')
+highlighted2 <- createCellStyle(wb)
 setFillPattern(highlighted2, fill = XLC$"FILL.SOLID_FOREGROUND")
 setFillForegroundColor(highlighted2, color = XLC$"COLOR.GREY_25_PERCENT")
 
 # create the style for the header row
-header <- createCellStyle(wb, 'header')
+header <- createCellStyle(wb)
 setFillPattern(header, fill = XLC$"FILL.SOLID_FOREGROUND")
 setFillForegroundColor(header, color = XLC$"COLOR.WHITE")
 setBorder(header, 'bottom', type = XLC$"BORDER.DOUBLE", color = XLC$"COLOR.BLACK")
