@@ -1,7 +1,7 @@
 
 -   [SETr script development](#setr-script-development)
     -   [Email list sign-up](#email-list-sign-up)
--   [Coming Up: Technical Team Workshop!](#coming-up-technical-team-workshop)
+-   [Coming Up: Technical Workshop in Virginia!](#coming-up-technical-workshop-in-virginia)
 -   [Project Summary](#project-summary)
 -   [Important Project Links](#important-project-links)
 -   [Monthly Call Notes](#monthly-call-notes)
@@ -17,25 +17,19 @@ Email list sign-up
 
 **[Click here](https://goo.gl/forms/CLWmBm2cexEhEhZt1)**
 
-Coming Up: Technical Team Workshop!
-===================================
+Coming Up: Technical Workshop in Virginia!
+==========================================
 
-**January 29-31, 2019**
+**July 15-16, 2019**
 
-Several team members will convene at Grand Bay NERR, and there will be opportunities for remote participation, to address the following objectives:
+*Objectives:*
 
-1.  Test the R scripts and workflows that are being developed as part of this project
-2.  Discuss technical issues and questions about the project
-3.  Communicate with the outreach team
-4.  Decide on approaches to upcoming project development
+1.  Present R scripts and workflows developed for this project
+2.  Present Reserve-level reports and maps
+3.  Present National synthesis
+4.  Discuss Environmental Statistics and SET datasets
 
-We anticipate the following opportunities for remote participation. Exact times and links have not yet been determined, but we anticipate 2-hour blocks. [Sign up for our email lists](https://goo.gl/forms/CLWmBm2cexEhEhZt1) for more information!
-
--   **Weds, 1/29, AM:** Technical discussion
--   **Weds, 1/29, PM:** Combined Outreach/Technical team discussion
--   **Thurs, 1/29, PM:** Statistics and moving forward
-
-Find more details, and make suggestions, [in the draft agenda.](https://docs.google.com/document/d/1lcsTvVeP1RDMwqp-bC2AYn-m0cafbsSw1_9W21VDnLs/edit?usp=sharing)
+View and make suggestions on the [draft agenda](https://docs.google.com/document/d/1sS_sPXOSiFwyOeIeL4DK96Nnot4F3wMXMnpvqFCj70A/edit?usp=sharing)
 
 Project Summary
 ===============
@@ -46,7 +40,8 @@ Important Project Links
 =======================
 
 -   **Sign up for our email lists** through [this Google form](https://goo.gl/forms/CLWmBm2cexEhEhZt1)
--   Keep up with R code at [the main GitHub repository](https://github.com/swmpkim/SETr_script_development)
+-   The first round of R code is at [the main GitHub repository](https://github.com/swmpkim/SETr_script_development)
+-   Code for each individual data set's transormation into this project's formats is [on Github: SETr\_data\_transformations](https://github.com/swmpkim/SETr_data_transformations)
 -   R code for Reserve-level workflows is being developed [on this GitHub page](https://github.com/swmpkim/SETr_Reserve_Template)
 -   Watch the [recording of the Kickoff Webinar](https://youtu.be/Gc7YedK1Ek0) from 9/25/2018
 -   See [slides from the Kickoff Webinar](https://drive.google.com/file/d/1LIT80g_CfRJH2dKXbORHGesQy1uNUJP7/view?usp=sharing)
@@ -59,6 +54,10 @@ Monthly Call Notes
 -   [2018-11-14](https://docs.google.com/document/d/1VeeC3II5p5dBNeFu-5YOTQ4BTEOp6vOk3iMdIGL_czY/edit?usp=sharing) - agenda only
 -   [2018-12-05 call notes](https://docs.google.com/document/d/1aPa10OZSupNXOZ5Lqvnm3WFn-ml-m6pxmbO_635APHo/edit?usp=sharing)
 -   [2019-01-02 call notes](https://docs.google.com/document/d/1FBiCwsmRTZBzv2r5Jivejd9CDH5PMTl9Nl6L2YTNs3Y/edit?usp=sharing)
+-   [2019-02-06](https://docs.google.com/document/d/1N_vqzJ_Gw1tDz1KcsPX-vN1e72Q7lszEAxL7xKhjeBE/edit?usp=sharing) - agenda plus a few comments
+-   [2019-03-06 call notes](https://docs.google.com/document/d/1kUFrqOYmvoSWUPs05o_Y8acmtEnLFdziGJ6xbxlo-xA/edit?usp=sharing)
+-   [2019-04-03 call notes](https://docs.google.com/document/d/19XfNi2tOs-HACxHfqxb_4F5MEZCtKzyyrAAkGKII32Q/edit?usp=sharing)
+-   [2019-05-01 draft agenda](https://docs.google.com/document/d/1sXo0iAO8OdT7NpkUUL7gW0CkiF9B0lRWSfMjCzq-o9Y/edit?usp=sharing)
 
 Useful References
 =================
