@@ -57,7 +57,8 @@ Monthly Call Notes
 -   [2019-02-06](https://docs.google.com/document/d/1N_vqzJ_Gw1tDz1KcsPX-vN1e72Q7lszEAxL7xKhjeBE/edit?usp=sharing) - agenda plus a few comments
 -   [2019-03-06 call notes](https://docs.google.com/document/d/1kUFrqOYmvoSWUPs05o_Y8acmtEnLFdziGJ6xbxlo-xA/edit?usp=sharing)
 -   [2019-04-03 call notes](https://docs.google.com/document/d/19XfNi2tOs-HACxHfqxb_4F5MEZCtKzyyrAAkGKII32Q/edit?usp=sharing)
--   [2019-05-01 draft agenda](https://docs.google.com/document/d/1sXo0iAO8OdT7NpkUUL7gW0CkiF9B0lRWSfMjCzq-o9Y/edit?usp=sharing)
+-   [2019-05-01 call notes](https://docs.google.com/document/d/1sXo0iAO8OdT7NpkUUL7gW0CkiF9B0lRWSfMjCzq-o9Y/edit?usp=sharing)
+-   Also check out and comment on our [suggested standard QA/QC codes for NERR SET data](https://docs.google.com/spreadsheets/d/1cqxi_Bz1CjpticfrPLf1_GgsoN2g_V1jlV9gAbzN6xw/edit?usp=sharing)
 
 Useful References
 =================
